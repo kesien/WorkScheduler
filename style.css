@@ -1,0 +1,382 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+html {
+  line-height: 1.6;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(to bottom, #222222, #303030);
+  min-height: 100vh;
+  color: #fff;
+  padding: 0 40px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.calendar__table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.calendar__table th {
+  font-weight: bold;
+  background-color: #ffa600;
+  color: #000;
+}
+
+@-moz-document url-prefix() {
+  .calendar__table td,
+  .calendar__table th {
+    background-clip: padding-box;
+  }
+}
+
+.calendar__table td,
+.calendar__table th {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.calendar__table th {
+  width: 13.57%;
+  padding: 10px 0;
+}
+
+.calendar__table th:nth-of-type(1) {
+  width: 5%;
+}
+
+
+.calendar__table td {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.calendar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.calendar__title {
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+.btn {
+  border: none;
+  background: transparent;
+  padding: 1rem;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.btn:focus,
+.btn:active {
+  outline: none;
+}
+
+.btn--arrow {
+  color: #00bd4f;
+  transition: all .3s ease;
+}
+
+.btn--arrow:active,
+.btn--arrow:hover {
+  color: #ffa600;
+}
+
+.calendar__splitday {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.calendar__splitday--hours {
+  justify-content: center;
+  align-items: center;
+  background-color: #00bd4f;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.calendar__splitday--half {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar__splitday--half:nth-of-type(1) {
+  border-bottom: 1px solid black;
+}
+
+.calendar .calendar__day--empty {
+  background-color: #d3d3d3;
+  color: #f9f9f9;
+  font-size: 42px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+.calendar__daynumber {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 2px 0 0 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #0080d6;
+  font-weight: 400;
+  font-size: 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.calendar__day {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar__personholiday {
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  color: rgb(199, 199, 199);
+  font-size: 12px;
+}
+
+.calendar__800 {
+  border-bottom: 1px solid #dadada;
+}
+
+.calendar__selectable {
+  position: relative;
+  cursor: pointer;
+}
+
+.calendar__selectable::after {
+  content: "+";
+  cursor: pointer;
+  font-size: 72px;
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  top: 15%;
+  left: 35%;
+  background: linear-gradient(to top, #009e42, #00bd4f);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: all .3s ease-in-out;
+}
+
+.calendar__selectable:hover::after {
+  opacity: 1;
+  box-shadow: 0 5px 8px rgba(0,0,0,0.4);
+}
+
+.calendar .calendar__weekend {
+  background-color: #97eaff;
+  position: relative;
+}
+
+.calendar .calendar__holiday {
+  background-color: #ff6f6f;
+  position: relative;
+  color: #f9f9f9;
+  font-size: 42px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+.calendar__holiday .calendar__800 {
+  border-bottom: none;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4);
+  color: #000;
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Modal Content/Box */
+.modal__content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 10px;
+  border: 1px solid #888;
+  border-radius: 3px;
+  width: 20%; /* Could be more or less, depending on screen size */
+  font-size: 18px;
+}
+
+.modal__content select {
+  font-size: 18px;
+}
+
+/* The Close Button */
+
+.modal__close {
+  color: #aaa;
+}
+
+.modal__close:hover,
+.modal__close:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal__form__group {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.modal__form__group label {
+  flex-grow: 2;
+}
+
+.btn--save,
+.btn--save:visited {
+  text-decoration: none;
+  display: block;
+  padding: 1rem 2rem;
+  background-color: #00bd4f;
+  color: #fff;
+  text-align: center;
+  margin: 1rem 0 0 0;
+  font-weight: 700;
+  transition: all .2s ease;
+}
+
+.btn--save:active,
+.btn--save:hover {
+  background-color: #ffa600;
+}
+
+.hidden {
+  display: none;
+}
+
+.calendar__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+.btn--start {
+  background-color: #0080d6;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 5px;
+  transition: all .3s;
+  margin-left: 10px;
+}
+
+.btn--download {
+  border: 1px solid #f9f9f9;
+  color: #f9f9f9;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+.btn--start:hover {
+  background-color: #0064a7;
+}
+
+.btn--start:disabled {
+  background-color: #aadafa;
+}
+
+.btn--reset {
+  background-color: #ffa600;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 5px;
+  transition: all .3s;
+  margin-left: 10px;
+}
+
+.btn--reset:hover {
+  background-color: #d88c00;
+}
+
+.summary {
+  text-align: center;
+  animation: fadeIn .8s ease-out;
+}
+
+.summary-table {
+  width: 40%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  margin-top: 5px;
+  color: #000;
+}
+
+.summary-table th {
+  background-color: #0080d6;
+  color: #fff;
+}
+
+.summary-table tr {
+  background-color: #fff;
+}
+
+.summary-table tr:nth-of-type(even) {
+  background-color: rgb(216, 216, 216);
+}
+
+.summary-table th,
+.summary-table td {
+  border: 1px solid #333;
+}
