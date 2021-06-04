@@ -92,6 +92,21 @@ startBtn.addEventListener('click', startBtnClick);
 span.addEventListener('click', closeModal);
 
 /**
+ * Add the mouseover and mouseleave event listeners to all names
+ */
+function addEventListeners() {
+  let spans = document.querySelectorAll('.name');
+  for (let span of spans) {
+    span.addEventListener('mouseover', (e) => {
+      highlightName(e);
+    });
+    span.addEventListener('mouseleave', (e) => {
+      removeHighlight(e);
+    });
+  }
+}
+
+/**
  * Decreases current date by 1 month and re-render the page.
  */
 function leftBtnClick() {
@@ -183,11 +198,13 @@ function addRequest() {
           } // end of if
         } // end of for
         workday.eight.push(selectedPerson);
-        calendarDivSelectedDay.querySelector('.calendar__800').innerText = workday.eight.join(', ');
+        calendarDivSelectedDay.querySelector('.calendar__800').innerHTML = createSpan(workday.eight);
+        
       } else { //end of if
         workday.halften.push(personSelect.options[personSelect.selectedIndex].value);
-        calendarDivSelectedDay.querySelector('.calendar__930').innerText = workday.halften.join(', ');
-      } //end of else
+        calendarDivSelectedDay.querySelector('.calendar__930').innerHTML = createSpan(workday.halften);
+      }
+      addEventListeners(); //end of else
     } // end of if
   } // end of for
 }
@@ -208,6 +225,44 @@ function modalSaveBtnClick(event) {
     addRequest();
   }      
   modal.style.display = "none";
+}
+
+/**
+ * Highlights the selected names
+ * @param {Event} event - Event
+ */
+function highlightName(event) {
+  let spans = document.querySelectorAll('.name');
+  let rows = document.querySelectorAll('.summary-table__row');
+  for (let span of spans) {
+    if (span.dataset.name == event.target.dataset.name) {
+      span.classList.add('highlight');
+    }
+  }
+  for (let row of rows) {
+    if (row.dataset.name == event.target.dataset.name) {
+      row.classList.add('summary-table__row--highlight');
+    }
+  }
+}
+
+/**
+ * Removes the highlight class from the given elements
+ * @param {Event} event - Event
+ */
+function removeHighlight(event) {
+  let spans = document.querySelectorAll('.name');
+  let rows = document.querySelectorAll('.summary-table__row');
+  for (let span of spans) {
+    if (span.dataset.name == event.target.dataset.name) {
+      span.classList.remove('highlight');
+    }
+  }
+  for (let row of rows) {
+    if (row.dataset.name == event.target.dataset.name) {
+      row.classList.remove('summary-table__row--highlight');
+    }
+  }
 }
 
 /**
@@ -413,6 +468,15 @@ UI functions
 ======================= */
 
 /**
+ * Create HTML span element with the given data.
+ * @param {Array} data - Array of persons
+ */
+function createSpan(data) {
+  let spans = data.map(person => `<span class='name' data-name='${person}'>${person}</span>`);
+  return spans.join(',&nbsp;');
+}
+
+/**
  * Updates the UI with the schedule.
  */
 function refreshCalendar() {
@@ -424,14 +488,14 @@ function refreshCalendar() {
         if(workday.isHoliday) {
           continue;
         }
-        eight.innerText = workday.eight.join(', ');
-        halften.innerText = workday.halften.join(', ');
+        eight.innerHTML = createSpan(workday.eight);
+        halften.innerHTML = createSpan(workday.halften);
+        addEventListeners();
       }
     }
     calendarDivWorkday.classList.remove('calendar__selectable');
   }
 }
-
 
 /**
  * Resets everything.
@@ -467,7 +531,7 @@ function showSummary() {
                 </thead>
                 <tbody>`;
   for (let person of persons) {
-    let row = `<tr>
+    let row = `<tr class='summary-table__row' data-name='${person.name}'>
       <td>${person.name}</td>
       <td>${person.eight}</td>
       <td>${person.halften}</td>

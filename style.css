@@ -154,7 +154,7 @@ body {
 .calendar__day {
   height: 60px;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   justify-content: center;
   align-items: center;
 }
@@ -300,10 +300,6 @@ body {
   background-color: #ffa600;
 }
 
-.hidden {
-  display: none;
-}
-
 .calendar__footer {
   display: flex;
   justify-content: flex-end;
@@ -352,7 +348,8 @@ body {
 
 .summary {
   text-align: center;
-  animation: fadeIn .8s ease-out;
+  opacity: 1;
+  transition: all .4s;
 }
 
 .summary-table {
@@ -379,4 +376,34 @@ body {
 .summary-table th,
 .summary-table td {
   border: 1px solid #333;
+}
+
+.name {
+  transition: all .3s;
+}
+
+.highlight {
+  cursor: pointer;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+  background-color: #0080d6;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transform: scale(1.07) translateY(-3px);
+  transition: all .3s;
+}
+
+
+.summary-table tr.summary-table__row {
+  transition: all .3s;
+}
+.summary-table tr.summary-table__row--highlight {
+  background-color: #ffa600;
+  transition: all .3s;
+}
+
+.hidden {
+  opacity: 0;
+  height: 0;
 }
