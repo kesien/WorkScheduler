@@ -271,14 +271,14 @@ body {
   cursor: pointer;
 }
 
-.modal__form__group {
+.modal__form-group {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   margin: 10px 0;
 }
 
-.modal__form__group label {
+.modal__form-group label {
   flex-grow: 2;
 }
 
