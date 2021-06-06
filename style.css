@@ -17,6 +17,13 @@ body {
   padding: 0 40px;
 }
 
+@media screen and (max-width: 780px) {
+  body {
+    padding: 0;
+  }
+}
+
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -27,9 +34,15 @@ body {
   }
 }
 
+.calendar__body {
+  overflow-x: scroll;
+}
+
 .calendar__table {
   border-collapse: collapse;
+  min-width: 700px;
   width: 100%;
+  overflow: scroll;
 }
 
 .calendar__table th {
@@ -77,6 +90,7 @@ body {
   font-size: 36px;
   font-weight: 400;
   letter-spacing: 3px;
+  text-align: center;
 }
 
 .btn {
@@ -308,22 +322,30 @@ body {
   padding: 5px;
 }
 
+.btn--reset,
 .btn--start {
-  background-color: #0080d6;
   color: #fff;
   font-weight: 700;
   font-size: 18px;
   border-radius: 5px;
   transition: all .3s;
-  margin-left: 10px;
 }
 
-.btn--download {
-  border: 1px solid #f9f9f9;
-  color: #f9f9f9;
-  font-weight: 700;
-  font-size: 18px;
-  border-radius: 5px;
+@media screen and (max-width: 500px) {
+  .btn--reset,
+  .btn--start {
+    width: 50%;
+  }
+}
+
+
+.btn--reset {
+  background-color: #ffa600;
+}
+
+.btn--start {
+  margin-left: 10px;
+  background-color: #0080d6;
 }
 
 .btn--start:hover {
@@ -332,16 +354,6 @@ body {
 
 .btn--start:disabled {
   background-color: #aadafa;
-}
-
-.btn--reset {
-  background-color: #ffa600;
-  color: #fff;
-  font-weight: 700;
-  font-size: 18px;
-  border-radius: 5px;
-  transition: all .3s;
-  margin-left: 10px;
 }
 
 .btn--reset:hover {
@@ -360,6 +372,12 @@ body {
   border-collapse: collapse;
   margin-top: 5px;
   color: #000;
+}
+
+@media screen and (max-width: 780px) {
+  .summary-table {
+    width: 100%;
+  }
 }
 
 .summary-table th {
