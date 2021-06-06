@@ -360,6 +360,7 @@ body {
   text-align: center;
   opacity: 1;
   transition: all .4s;
+  font-size: 1.6rem;
 }
 
 .summary-table {
@@ -429,7 +430,7 @@ body {
 
 @media screen and (max-width: 500px) {
   body {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   .btn {
@@ -460,5 +461,19 @@ body {
   .btn--reset,
   .btn--start {
     width: 50%;
+  }
+
+  .highlight {
+    padding: .1rem .5rem;
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);
+  }
+
+  .calendar__table th {
+    padding: 0;
+  }
+
+  .calendar__daynumber {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
