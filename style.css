@@ -76,7 +76,7 @@ body {
 }
 
 .calendar__table th {
-  min-width: 12rem; 
+  width: 12rem; 
   padding: 1rem 0;
 }
 
