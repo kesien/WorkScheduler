@@ -53,12 +53,12 @@ const persons = [
     halften: 0,
     personholiday: 0
   },
-  { 
+/*   { 
     name: "Timi",
     eight: 0,
     halften: 0,
     personholiday: 0
-   },
+   }, */
    {
      name: "Marina",
      eight: 0,
@@ -370,6 +370,9 @@ function updateEveryPersonInfo() {
  */
 function isItMax(index) {
   let maxPersonCountForEight = Math.floor((persons.length - workdays[index].personholiday.length) / 2);
+  if (index % 2 == 1) {
+    maxPersonCountForEight += 1;
+  }
   return workdays[index].eight.length >= maxPersonCountForEight;
 }
 
@@ -420,7 +423,9 @@ function createSchedule() {
     let personsNotOnHolidays  = persons.filter(person => !workday.personholiday.includes(person.name)); // get every person who is not on holiday
     let names = personsNotOnHolidays.map(person => person.name); // get the names of the selected persons
     let index = workdays.indexOf(workday) // index of the day
-    
+    if (index % 2 == 1) {
+      maxPersonCountForEight+=1;
+    }
     if(workday.isHoliday) { 
       continue; // Skip the day if it's holiday.
     }
