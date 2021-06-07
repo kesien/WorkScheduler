@@ -557,9 +557,9 @@ function getCell(date) {
     <td class='calendar__selectable' data-day=${curDate}>
       <div class='calendar__splitday'>
         <div class='calendar__personholiday'></div>
-        <span class='calendar__daynumber'>${date.getDate()}</span>
         <div class='calendar__day calendar__800'></div>
         <div class='calendar__day calendar__930'></div>
+        <span class='calendar__daynumber'>${date.getDate()}</span>
       </div>
     </td>`;
   } else {

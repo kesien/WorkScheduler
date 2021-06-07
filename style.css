@@ -162,18 +162,14 @@ body {
 
 .calendar__daynumber {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: #0080d6;
+  top: 50%;
+  left: 50%;
   font-weight: 400;
-  font-size: 1rem;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 5rem;
+  color: #a5a5a5;
+  /* text-shadow: 1px 1px rgb(105, 105, 105); */
+  opacity: .15;
+  transform: translate(-50%, -50%);
 }
 
 
@@ -183,6 +179,8 @@ body {
   /* flex-direction: column; */
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .calendar__personholiday {
@@ -223,6 +221,7 @@ body {
   box-shadow: 0 .3rem .6rem rgba(0,0,0,0.4);
   opacity: 0;
   transition: all .3s ease-in-out;
+  z-index: 40;
 }
 
 .calendar__selectable:hover::after {
@@ -451,7 +450,7 @@ body {
   }
 
   .calendar__daynumber {
-    display: none;
+    font-size: 4rem;
   }
 
   /* .calendar__personholiday {
@@ -510,10 +509,5 @@ body {
 
   .calendar__table th {
     padding: 0;
-  }
-
-  .calendar__daynumber {
-    width: 1.5rem;
-    height: 1.5rem;
   }
 }
