@@ -269,6 +269,7 @@ function removeHighlight(event) {
  * Reset button's event handler.
  */
 function resetBtnClick() {
+  startBtn.disabled = false;
   reset();
   render();
 }
@@ -277,6 +278,7 @@ function resetBtnClick() {
  * Start button's event handler.
  */
 function startBtnClick() {
+  startBtn.disabled = true;
   createSchedule();
   refreshCalendar();
   showSummary();
