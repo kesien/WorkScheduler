@@ -34,7 +34,7 @@ body {
   box-sizing: border-box;
   color: var(--color-primary-dark);
   min-height: 100vh;
-  background-color: #f7f7f7;
+  background: var(--color-secondary);
 }
 
 .container {
@@ -48,7 +48,7 @@ body {
   grid-template-columns: 5% repeat(7, 13.57%);
   grid-template-rows: 5rem;
   grid-auto-rows: 14rem;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   max-width: 100%;
 }
 
@@ -182,7 +182,9 @@ body {
   align-items: center;
 }
 
-
+.calendar__800 {
+  background-color: var(--color-secondary);
+}
 
 .calendar__930 {
   background-color: var(--color-secondary-dark);
@@ -479,6 +481,13 @@ body {
     width: 100%;
   }
 
+  .cell--header {
+    font-size: 1.3rem;
+  }
+
+  .calendar__table {
+    font-size: 1.3rem;
+  }
   .calendar .calendar__holiday {
     font-size: 2.5rem;
   }
@@ -610,7 +619,13 @@ body {
   }
 
   .btn--arrow {
-    font-size: 2.8rem;
+    font-size: 3.2rem;
+  }
+  .calendar__header {
+    padding: 0 .5rem;
+  }
+  .calendar__title {
+    font-size: 3.2rem;
   }
 
   .modal__content {
@@ -624,10 +639,6 @@ body {
 
   .modal__content select {
     font-size: 1.6rem;
-  }
-
-  .calendar__title {
-    font-size: 2.4rem;
   }
 
   .btn--reset,

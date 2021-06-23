@@ -269,7 +269,6 @@ function removeHighlight(event) {
  * Reset button's event handler.
  */
 function resetBtnClick() {
-  startBtn.disabled = false;
   reset();
   render();
 }
@@ -541,6 +540,7 @@ function refreshCalendar() {
  * Resets everything.
  */
 function reset() {
+  startBtn.disabled = false;
   summaryDiv.classList.add('hidden')
   typeSelect.options[0].disabled = false;
   totalWorkDays = 0;
