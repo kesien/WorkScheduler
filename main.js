@@ -453,30 +453,29 @@ function createSchedule() {
       // We want to fairly distribute so we filter out the people who were scheduled for 9:30 at the previous day.
       let filtered;
       if (index % 2 == 1) {
-        filtered = personsNotOnHolidays.filter(person => workdays[index-1].halften.includes(person.name) && !personAlreadyScheduled(index, person.name));
+        if(!workdays[index-1].isHoliday) {
+          filtered = personsNotOnHolidays.filter(person => workdays[index-1].halften.includes(person.name) && !personAlreadyScheduled(index, person.name));
+        } else {
+          filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
+        }
+        while(workday.eight.length != filtered.length) {
+          if(workday.eight.length == Math.round(personsNotOnHolidays.length / 2)) {
+            break;
+          }
+          let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
+          if (personIsAlreadyAdded(index, randomPerson)) {
+            continue; // Skip the person if it's already scheduled
+          }   
+          workday.eight.push(randomPerson.name);
+          persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
+        }
       } else {
         filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
-      }
-      if (index != 0) {
-
-        // If we don't have the required amount of people (because of requests) we randomly select additional ones.
         if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
           let plusPerson = persons.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
           let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
           filtered.push(plusRandomPerson);
         }
-      }
-
-      if (index % 2 == 1) {
-          while(workday.eight.length != filtered.length) {
-            let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
-            if (personIsAlreadyAdded(index, randomPerson)) {
-              continue; // Skip the person if it's already scheduled
-            }   
-            workday.eight.push(randomPerson.name);
-            persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
-          }
-      } else {
         let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
         if (personIsAlreadyAdded(index, randomPerson)) {
           continue; // Skip the person if it's already scheduled
@@ -485,6 +484,11 @@ function createSchedule() {
         workday.eight.push(randomPerson.name);
         persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
       }
+
+/*       if (index != 0) {
+        // If we don't have the required amount of people (because of requests) we randomly select additional ones.
+        
+      } */
     }
 
     // Schedule the remaining persons for 9:30
@@ -509,7 +513,7 @@ UI functions
  */
 function createSpan(data) {
   let spans = data.map(person => `<span class='name' data-name='${person}'>${person}</span>`);
-  return spans.join(',&nbsp;');
+  return spans.join('');
 }
 
 /**
@@ -586,25 +590,27 @@ function showSummary() {
  */
 function getCell(date) {
   let curDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  let realDate = `0${date.getMonth() + 1}-${day}`
 
   if (!isWeekend(date)) {
     populateWorkdays(curDate);
     return `
-    <td class='calendar__selectable' data-day=${curDate}>
-      <div class='calendar__splitday'>
+    <div class='cell calendar__selectable' data-day=${curDate} data-realdate=${realDate} data-dayname=${napok[getDay(date)]}>
+      <div class='calendar__day'>
         <div class='calendar__personholiday'></div>
-        <div class='calendar__day calendar__800'></div>
-        <div class='calendar__day calendar__930'></div>
+        <div class='calendar__800'></div>
+        <div class='calendar__930'></div>
         <span class='calendar__daynumber'>${date.getDate()}</span>
       </div>
-    </td>`;
+    </div>`;
   } else {
     return `
-    <td class='calendar__weekend'>
+    <div class='cell calendar__weekend'>
       <div>
         <span class='calendar__daynumber'>${date.getDate()}</span>
       </div>
-    </td>`;
+    </div>`;
   }
 }
 
@@ -646,52 +652,53 @@ function closeModal() {
 
 /**
  * Create the calendar table and render it to the UI.
- * @param {Object} calendardiv - The HTML element which contains the calendar
  * @param {number} year - Year
  * @param {number} month - Month
  */
-function createCalendar(calendardiv, year, month) {
-  let dayCells = napok.map(nap => { return `<th>${nap}</th>`}).join('');
+function createCalendar(year, month) {
+  let dayCells = napok.map(nap => { return `<div class="cell--header">${nap}</div>`}).join('');
   let table = `
-  <table class="calendar__table">
-    <tr>
-      <th><i class="fas fa-clock"></i></th>
-      ${dayCells}
-    </tr>
-    <tr>`;
+  <div class="calendar__table">
+    <div class="cell--header"><i class="fas fa-clock"></i></div>
+    ${dayCells}
+  `;
   let d = new Date(year, month);
-
-  table += "<td><div class='calendar__splitday calendar__splitday--hours'><div class='calendar__splitday--half calendar__day'>8:00</div><div class='calendar__splitday--half calendar__day'>9:30</div></div></td>";
+  table += "<div class='cell cell--hours'><div class='calendar__day calendar__day--hours'><div class='calendar__day--half'>8:00</div><div class='calendar__day--half'>9:30</div></div></div>";
 
   // Add empty cells
   for (let i = 0; i < getDay(d); i++) {
-    table += "<td class='calendar__day--empty'><i class='fas fa-ban'></i></td>";
+    table += "<div class='cell calendar__day--empty'><i class='fas fa-ban'></i></div>";
   }
-  
+
   while (d.getMonth() == month) {
     table += getCell(d);
     
     // Add a new row if it's end of week
     if (getDay(d) % 7 == 6) {
-      table += '</tr><tr>'
       let next = new Date(year, month, d.getDate() + 1);
       if(next.getMonth() == month) {
-        table += "<td><div class='calendar__splitday calendar__splitday--hours'><div class='calendar__splitday--half calendar__day'>8:00</div><div class='calendar__splitday--half calendar__day'>9:30</div></div></td>";
+        table += `<div class='cell cell--hours'>
+                    <div class='calendar__day calendar__day--hours'>
+                      <div class='calendar__day--half'>8:00</div>
+                      <div class='calendar__day--half'>9:30</div>
+                    </div>
+                  </div>`;
       }
 
     }
-    
     d.setDate(d.getDate() + 1);
   }
 
   // Add empty cells
   if (getDay(d) != 0) {
     for (let i = getDay(d); i < 7; i++) {
-      table += "<td class='calendar__day--empty'><i class='fas fa-ban'></i></td>";
+      table += `<div class='cell calendar__day--empty'>
+                  <i class='fas fa-ban'></i>
+                </div>`;
     }
   }
 
-  table += '</tr></table>';
+  table += '</div>';
   calendarDiv.innerHTML = table;
   calendarDivWorkdays = document.querySelectorAll('.calendar__selectable');
 
@@ -716,7 +723,7 @@ window.onclick = function(event) {
  */
 function render() {
   workdays = [];
-  createCalendar(calendarDiv, year, month);
+  createCalendar(year, month);
   titleMonth.innerText = `${year} ${months[month]}`;
   getWorkDays(year, month);
 }

@@ -59,8 +59,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="main.js" type="text/javascript" defer></script>
     <title>Beosztás készítő</title>
   </head>
   <body>
@@ -108,28 +107,29 @@
         </div>
       </div>
       <!--  Modal End -->
-      <section class="calendar">
-        <div class="calendar__header">
-          <button class="btn btn--arrow" id="left-arrow">
-            <i class="fas fa-arrow-alt-circle-left"></i>
-          </button>
-          <h2 class="calendar__title"></h2>
-          <button class="btn btn--arrow" id="right-arrow">
-            <i class="fas fa-arrow-alt-circle-right"></i>
-          </button>
-        </div>
-        <div class="calendar__body" id="calendar__body"></div>
-        <div class="calendar__footer">
-          <button class="btn btn--reset">
-            <i class="fas fa-sync"></i> Visszaállítás
-          </button>
-          <button class="btn btn--start">
-            <i class="fas fa-play-circle"></i> OK
-          </button>
-        </div>
-        <div class="summary hidden"></div>
-      </section>
+      <div class="container">
+        <section class="calendar">
+          <div class="calendar__header">
+            <button class="btn btn--arrow" id="left-arrow">
+              <i class="fas fa-arrow-alt-circle-left"></i>
+            </button>
+            <h2 class="calendar__title"></h2>
+            <button class="btn btn--arrow" id="right-arrow">
+              <i class="fas fa-arrow-alt-circle-right"></i>
+            </button>
+          </div>
+          <div class="calendar__body" id="calendar__body"></div>
+          <div class="calendar__footer">
+            <button class="btn btn--reset">
+              <i class="fas fa-sync"></i> Visszaállítás
+            </button>
+            <button class="btn btn--start">
+              <i class="fas fa-play-circle"></i> OK
+            </button>
+          </div>
+          <div class="summary hidden"></div>
+        </section>
+      </div>
     </main>
-    <script src="main.js" type="text/javascript"></script>
   </body>
 </html>
