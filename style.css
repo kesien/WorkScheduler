@@ -507,6 +507,7 @@ body {
     grid-auto-rows: 20rem;
     grid-template-columns: 100%;
     row-gap: 2rem;
+    overflow: hidden;
   }
 
   .cell--hours {
