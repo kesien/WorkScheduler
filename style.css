@@ -329,7 +329,8 @@ body {
 }
 
 .btn--reset,
-.btn--start {
+.btn--start,
+.btn--partial {
   color: #fff;
   font-weight: 700;
   font-size: 1.8rem;
@@ -339,20 +340,33 @@ body {
 }
 
 .btn--reset {
+  margin-left: 1rem;
   background-color: #ffa600;
+}
+
+.btn--partial {
+  background-color: #0080d6;
+}
+
+.btn--partial:hover {
+  background-color: #0064a7;
+}
+
+.btn--partial:disabled {
+  background-color: #aadafa;
 }
 
 .btn--start {
   margin-left: 1rem;
-  background-color: #0080d6;
+  background-color: #00bd4f;
 }
 
 .btn--start:hover {
-  background-color: #0064a7;
+  background-color: #00a545;
 }
 
 .btn--start:disabled {
-  background-color: #aadafa;
+  background-color: #5ff39d;
 }
 
 .btn--reset:hover {
@@ -398,10 +412,19 @@ body {
   z-index: 30;
 }
 
+.dragging {
+  opacity: .6;
+}
+
 .calendar__800 .name:not(:last-child)::after,
 .calendar__930 .name:not(:last-child)::after {
   content: ", ";
   white-space: pre;
+}
+
+.request {
+  color: #e74c3c;
+  font-weight: 700;
 }
 
 .highlight {
@@ -414,6 +437,10 @@ body {
   box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);
   transform: translateY(-3px);
   transition: all .3s;
+}
+
+.request.highlight {
+  background-color: #ffa600;
 }
 
 .summary-table tr.summary-table__row {
