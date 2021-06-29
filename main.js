@@ -457,17 +457,17 @@ function createSchedule() {
         } else {
           filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
         }
-        while(workday.eight.length != filtered.length) {
-          if(workday.eight.length == Math.round(personsNotOnHolidays.length / 2)) {
-            break;
-          }
-          let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
-          if (personIsAlreadyAdded(index, randomPerson)) {
-            continue; // Skip the person if it's already scheduled
-          }   
-          workday.eight.push(randomPerson.name);
-          persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
+        if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
+          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
+          let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
+          filtered.push(plusRandomPerson);
         }
+        let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
+        if (personIsAlreadyAdded(index, randomPerson)) {
+          continue; // Skip the person if it's already scheduled
+        }   
+        workday.eight.push(randomPerson.name);
+        persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
       } else {
         filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
         if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
