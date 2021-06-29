@@ -471,7 +471,7 @@ function createSchedule() {
       } else {
         filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
         if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
-          let plusPerson = persons.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
+          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
           let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
           filtered.push(plusRandomPerson);
         }
