@@ -6,48 +6,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="kesien" />
     <meta name="description" content="A simple workschedule maker app" />
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="icons/apple-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="icons/apple-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="icons/apple-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="icons/apple-icon-76x76.png"
+    />
     <link
       rel="apple-touch-icon"
       sizes="114x114"
-      href="/apple-icon-114x114.png"
+      href="icons/apple-icon-114x114.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="120x120"
-      href="/apple-icon-120x120.png"
+      href="icons/apple-icon-120x120.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="144x144"
-      href="/apple-icon-144x144.png"
+      href="icons/apple-icon-144x144.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href="/apple-icon-152x152.png"
+      href="icons/apple-icon-152x152.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/apple-icon-180x180.png"
+      href="icons/apple-icon-180x180.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="192x192"
-      href="/android-icon-192x192.png"
+      href="icons/android-icon-192x192.png"
     />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="icons/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="icons/favicon-16x16.png"
+    />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+    <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -101,7 +132,7 @@
                   <option value="9">9:30</option>
                 </select>
               </div>
-              <a href="#" class="btn--save">Mentés</a>
+              <a href="#" class="btn--save btn--save-plus">Mentés</a>
             </form>
           </div>
         </div>
@@ -120,19 +151,54 @@
           </div>
           <div class="calendar__body" id="calendar__body"></div>
           <div class="calendar__footer">
-            <button class="btn btn--partial">
+            <button class="btn btn--footer btn--print">
+              <i class="fas fa-print"></i> Nyomtatás
+            </button>
+            <button class="btn btn--footer btn--partial">
               <i class="fas fa-undo"></i> Visszállít
             </button>
-            <button class="btn btn--reset">
+            <button class="btn btn--footer btn--reset">
               <i class="fas fa-sync"></i> Reset
             </button>
-            <button class="btn btn--start">
+            <button class="btn btn--footer btn--start">
               <i class="fas fa-play-circle"></i> OK
             </button>
           </div>
           <div class="summary hidden"></div>
         </section>
       </div>
+
+      <div class="modal" id="editModal">
+        <div class="modal__content">
+          <div class="modal__header">
+            <h3 class="modal__title">2021. Július 30</h3>
+            <span class="modal__close"
+              ><i class="fas fa-window-close"></i
+            ></span>
+          </div>
+          <div class="modal__body">
+            <div class="modal__holiday">
+              Szabadság:
+              <div class="modal__holiday-name">
+                Orsi <span><i class="far fa-times-circle"></i></span>
+              </div>
+              <div class="modal__holiday-name">
+                Heni <span><i class="far fa-times-circle"></i></span>
+              </div>
+            </div>
+            <div class="modal__day">
+              <div class="modal__hour modal__hour--1">8:00</div>
+              <div class="modal__800 modalcontainer"></div>
+            </div>
+            <div class="modal__day">
+              <div class="modal__hour modal__hour--2">9:30</div>
+              <div class="modal__930 modalcontainer"></div>
+            </div>
+          </div>
+          <a href="#" class="btn--save btn--edit-save">Mentés</a>
+        </div>
+      </div>
+      <div class="test"></div>
     </main>
   </body>
 </html>

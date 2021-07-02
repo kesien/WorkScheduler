@@ -1,0 +1,141 @@
+* {
+  padding: 0;
+  margin: 0;
+  /*box-sizing: border-box;*/
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+table.schedule {
+  text-align: center;
+  border-collapse: collapse;
+  font-weight: 700;
+  table-layout: fixed;
+  box-sizing: content-box;
+}
+
+table.schedule th {
+  width: 130px;
+}
+
+table.schedule th:first-of-type {
+  width: 80px;
+}
+
+table.schedule,
+table.schedule th,
+table.schedule td {
+  border: 3px solid black;
+}
+
+table.schedule th:first-of-type {
+  border-bottom: none !important;
+}
+table.schedule tr:nth-child(1) > td:nth-child(1) {
+  border-top: none;
+}
+
+.names:nth-child(1) {
+  border-bottom: 3px solid black !important;
+}
+
+/*table.schedule th div:first-of-type {
+        border-bottom: 3px solid black;
+      }*/
+
+.date {
+  padding: 5px 0;
+  background-color: #c6e0b4 !important;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.date:nth-of-type(1) {
+}
+
+table.schedule td div {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+table.schedule td div:not(:last-of-type) {
+  border-bottom: 1px solid black;
+}
+
+table.schedule tr:nth-child(even) td {
+  height: 97px;
+}
+
+.hours {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.eight,
+.halften {
+  background-color: #c6e0b4 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  padding: 0 5px;
+  flex: 1;
+}
+
+.eight {
+  border-bottom: 3px solid black !important;
+}
+
+.names {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 50%;
+}
+
+.name {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.request {
+  color: #c00000;
+}
+
+.holiday {
+  color: #0070c0;
+}
+
+.summary {
+  flex: 0 0 35%;
+  margin-left: 20px;
+}
+
+.summary-table {
+  font-weight: 700;
+}
+
+.summary-table td {
+  padding: 5px;
+}
+
+.summary-table tr:first-of-type td {
+  text-align: right;
+}
+
+.summary-table td:last-of-type {
+  color: #0070c0;
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+}
