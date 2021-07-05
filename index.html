@@ -155,7 +155,7 @@
               <i class="fas fa-print"></i> Nyomtatás
             </button>
             <button class="btn btn--footer btn--partial">
-              <i class="fas fa-undo"></i> Visszállít
+              <i class="fas fa-undo"></i> Vissza
             </button>
             <button class="btn btn--footer btn--reset">
               <i class="fas fa-sync"></i> Reset
@@ -177,13 +177,16 @@
             ></span>
           </div>
           <div class="modal__body">
+            <input type="hidden" value="0" class="date-data" />
             <div class="modal__holiday">
               Szabadság:
-              <div class="modal__holiday-name">
-                Orsi <span><i class="far fa-times-circle"></i></span>
-              </div>
-              <div class="modal__holiday-name">
-                Heni <span><i class="far fa-times-circle"></i></span>
+              <div class="modal__holiday-list">
+                <div class="modal__holiday-name" data-name="Orsi">
+                  Orsi <span><i class="far fa-times-circle"></i></span>
+                </div>
+                <div class="modal__holiday-name" data-name="Heni">
+                  Heni <span><i class="far fa-times-circle"></i></span>
+                </div>
               </div>
             </div>
             <div class="modal__day">
@@ -195,6 +198,7 @@
               <div class="modal__930 modalcontainer"></div>
             </div>
           </div>
+          <div class="modal__unscheduled"></div>
           <a href="#" class="btn--save btn--edit-save">Mentés</a>
         </div>
       </div>

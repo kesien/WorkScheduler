@@ -212,6 +212,8 @@ function addRequest() {
 function modalSaveBtnClick(event) {
   event.preventDefault();
   let type = typeSelect.options[typeSelect.selectedIndex].value;
+  backUp();
+  partialBtn.disabled = false;      
   
   if (type == "holiday") {
     addHoliday();
@@ -219,7 +221,7 @@ function modalSaveBtnClick(event) {
     addPersonHoliday();
   } else if (type == "request") {
     addRequest();
-  }      
+  }
   modal.style.display = "none";
 }
 
@@ -325,7 +327,24 @@ function backUp() {
 }
 
 function editSave(data) {
-  
+  // TODO: implement this
+  /* let date = editModal.querySelector('.date-data').value;
+  let day = workdays.filter(workday => workday.date == date);
+
+  let eightSpans = editModal.querySelectorAll('.modal__800 > .draggable');
+  let halftenSpans = editModal.querySelectorAll('.modal__930 > .draggable');
+  eightSpans.forEach(spanElement => {
+    let p = persons.filter(person => person.name == spanElement.dataset.name);
+    if (day[0].eight.filter(personObject => personObject.name == p[0].name).length == 0) {
+      day[0].eight.push({name: p[0].name, isRequest: false});
+      p.eight += 1;
+    }
+    if (day[0].halften.filter(personObject => personObject.name == p[0].name).length != 0) {
+      day[0].halften = day[0].halften.filter(po => po.name != p[0].name);
+    }
+    refreshCalendar();
+    showSummary();
+  }) */
 }
 
 /**
@@ -750,6 +769,7 @@ function showModal(data) {
 function showEditModal(data) {
   let year, month, day;
   [year, month, day] = data.split('-');
+  editModal.querySelector('.date-data').value = data;
   resetModals();
   let dayData = workdays.filter(workday => workday.date == data);
   if (dayData[0] != 0) {
@@ -761,11 +781,17 @@ function showEditModal(data) {
     let halften = dayData[0].halften.map(personObject => {
       return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`
     });
+    let holiday = dayData[0].personholiday.map(personObject => {
+      return `<div class="modal__holiday-name" data-name="${personObject.name}">${personObject.name}
+                <span class='remove'><i class="far fa-times-circle"></i></span>
+              </div>`;
+    })
     
-
     editModal.querySelector('.modal__800').innerHTML = eight.join('');
     editModal.querySelector('.modal__930').innerHTML = halften.join('');
+    editModal.querySelector('.modal__holiday-list').innerHTML = holiday.join('');
     const draggables = editModal.querySelectorAll('.draggable');
+    const removeIcons = editModal.querySelectorAll('.remove');
 
     draggables.forEach(draggable => {
       draggable.addEventListener('dragstart', () => {
@@ -781,8 +807,34 @@ function showEditModal(data) {
         draggable.classList.remove('dragging');
       });
     });
+
+    removeIcons.forEach(removeIcon => {
+      removeIcon.addEventListener('click', removeHoliday);
+    })
     editModal.style.display = "flex";
   }
+}
+
+function removeHoliday() {
+  let name = this.parentElement.dataset.name
+  let date = editModal.querySelector('.date-data').value;
+  let workday = workdays.filter(workday => workday.date == date);
+  let p = workday[0].personholiday.filter(person => person.name == name)
+  workday[0].personholiday = workday[0].personholiday.filter(person => person != p[0]);
+  let newDraggable = document.createElement("SPAN");
+  newDraggable.innerHTML = `<i class="fas fa-arrows-alt"></i> ${name}`;
+  newDraggable.dataset.name = name;
+  newDraggable.draggable = true;
+  newDraggable.classList.add('draggable');
+  editModal.querySelector('.modal__holiday-list').removeChild(this.parentElement);
+  editModal.querySelector('.modal__unscheduled').appendChild(newDraggable);
+  newDraggable.addEventListener('dragstart', () => {
+    newDraggable.classList.add('dragging');
+  });
+
+  newDraggable.addEventListener('dragend', () => {
+    newDraggable.classList.remove('dragging');
+  });
 }
 
 /**
@@ -893,6 +945,9 @@ function createPrintTable() {
   
   let daterow = `<tr><td>&nbsp;</td>`;
   let schedulerow = `<tr><td><div class='hours'><div class='eight'>8:00-16:30</div><div class='halften'>9:30-18:00</div></div></td>`
+  while(isWeekend(d)) {
+    d.setDate(d.getDate() + 1);
+  }
   for (let i = 0; i < getDay(d); i++) {
     daterow += `<td><div class='date'>&nbsp;</div></td>`;
     schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`
@@ -960,6 +1015,13 @@ function createPrintTable() {
     daterow += `<td><div class='date'>${displayDate}</div></td>`;
     schedulerow += `<td><div class='names'>${eight.join('')}</div><div class='names'>${halften.join('')}</div></td>`;
     d.setDate(d.getDate() + 1);
+  }
+  
+  if (getDay(d) != 0) {
+    for (let i = getDay(d); i < 5; i++) {
+      daterow += `<td><div class='date'>&nbsp;</div></td>`;
+      schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`
+    }
   }
   content += daterow;
   content += schedulerow;
