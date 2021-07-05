@@ -864,6 +864,11 @@ body {
   .btn--print {
     margin-right: 0;
   }
+
+  .calendar__plus-icon {
+    margin-left: 10%;
+    margin-top: 2rem;
+  }
 }
 
 @media print {
