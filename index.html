@@ -9,76 +9,79 @@
     <link
       rel="apple-touch-icon"
       sizes="57x57"
-      href="icons/apple-icon-57x57.png"
+      href="res/icons/apple-icon-57x57.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="60x60"
-      href="icons/apple-icon-60x60.png"
+      href="res/icons/apple-icon-60x60.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="72x72"
-      href="icons/apple-icon-72x72.png"
+      href="res/icons/apple-icon-72x72.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="76x76"
-      href="icons/apple-icon-76x76.png"
+      href="res/icons/apple-icon-76x76.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="114x114"
-      href="icons/apple-icon-114x114.png"
+      href="res/icons/apple-icon-114x114.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="120x120"
-      href="icons/apple-icon-120x120.png"
+      href="res/icons/apple-icon-120x120.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="144x144"
-      href="icons/apple-icon-144x144.png"
+      href="res/icons/apple-icon-144x144.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href="icons/apple-icon-152x152.png"
+      href="res/icons/apple-icon-152x152.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="icons/apple-icon-180x180.png"
+      href="res/icons/apple-icon-180x180.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="192x192"
-      href="icons/android-icon-192x192.png"
+      href="res/icons/android-icon-192x192.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="icons/favicon-32x32.png"
+      href="res/icons/favicon-32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="96x96"
-      href="icons/favicon-96x96.png"
+      href="res/icons/favicon-96x96.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="icons/favicon-16x16.png"
+      href="res/icons/favicon-16x16.png"
     />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png" />
+    <meta
+      name="msapplication-TileImage"
+      content="res/icons/ms-icon-144x144.png"
+    />
     <meta name="theme-color" content="#ffffff" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -89,21 +92,52 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/res/styles/main.css" />
     <script src="main.js" type="text/javascript" defer></script>
     <title>Beosztás készítő</title>
   </head>
   <body>
-    <main>
-      <!-- Modal Start -->
+    <section class="section-calendar">
+      <div class="container">
+        <div class="calendar">
+          <div class="calendar__header">
+            <button class="btn btn--arrow" id="left-arrow">
+              <i class="fas fa-arrow-alt-circle-left"></i>
+            </button>
+            <h2 class="calendar__title"></h2>
+            <button class="btn btn--arrow" id="right-arrow">
+              <i class="fas fa-arrow-alt-circle-right"></i>
+            </button>
+          </div>
+          <div class="calendar__body" id="calendar__body"></div>
+          <div class="calendar__footer">
+            <button
+              id="btn-print"
+              class="btn btn--footer btn--primary btn--print"
+            >
+              <i class="fas fa-print"></i> Nyomtatás
+            </button>
+            <button id="btn-partial" class="btn btn--footer btn--primary">
+              <i class="fas fa-undo"></i> Visszavonás
+            </button>
+            <button id="btn-reset" class="btn btn--footer btn--primary">
+              <i class="fas fa-sync"></i> Reset
+            </button>
+            <button id="btn-start" class="btn btn--footer btn--green">
+              <i class="fas fa-play-circle"></i> OK
+            </button>
+          </div>
+          <div class="summary hidden"></div>
+        </div>
+      </div>
+    </section>
+    <section class="section-modals">
       <div id="myModal" class="modal">
-        <!-- Modal content -->
         <div class="modal__content">
           <div class="modal__header">
             <h3 class="modal__title"></h3>
             <span class="modal__close"><i class="fa fa-window-close"></i></span>
           </div>
-          <!-- Modal Form -->
           <div class="modal__body">
             <form class="modal__form">
               <div class="modal__form-group modal__form-group--type">
@@ -116,14 +150,7 @@
               </div>
               <div class="modal__form-group modal__form-group--person hidden">
                 <label for="personSelect">Kicsoda?</label>
-                <select id="personSelect">
-                  <option selected value="Heni">Heni</option>
-                  <option value="Orsi">Orsi</option>
-                  <option value="Anita">Anita</option>
-                  <!--<option value="Timi">Timi</option>-->
-                  <option value="Marina">Marina</option>
-                  <option value="Judit">Judit</option>
-                </select>
+                <select id="personSelect"></select>
               </div>
               <div class="modal__form-group modal__form-group--when hidden">
                 <label for="whenSelect">Mikor?</label>
@@ -132,40 +159,12 @@
                   <option value="9">9:30</option>
                 </select>
               </div>
-              <a href="#" class="btn--save btn--save-plus">Mentés</a>
+              <a href="#" id="btn-save-plus" class="btn btn--save btn--green"
+                >Mentés</a
+              >
             </form>
           </div>
         </div>
-      </div>
-      <!--  Modal End -->
-      <div class="container">
-        <section class="calendar">
-          <div class="calendar__header">
-            <button class="btn btn--arrow" id="left-arrow">
-              <i class="fas fa-arrow-alt-circle-left"></i>
-            </button>
-            <h2 class="calendar__title"></h2>
-            <button class="btn btn--arrow" id="right-arrow">
-              <i class="fas fa-arrow-alt-circle-right"></i>
-            </button>
-          </div>
-          <div class="calendar__body" id="calendar__body"></div>
-          <div class="calendar__footer">
-            <button class="btn btn--footer btn--print">
-              <i class="fas fa-print"></i> Nyomtatás
-            </button>
-            <button class="btn btn--footer btn--partial">
-              <i class="fas fa-undo"></i> Vissza
-            </button>
-            <button class="btn btn--footer btn--reset">
-              <i class="fas fa-sync"></i> Reset
-            </button>
-            <button class="btn btn--footer btn--start">
-              <i class="fas fa-play-circle"></i> OK
-            </button>
-          </div>
-          <div class="summary hidden"></div>
-        </section>
       </div>
 
       <div class="modal" id="editModal">
@@ -199,10 +198,11 @@
             </div>
           </div>
           <div class="modal__unscheduled"></div>
-          <a href="#" class="btn--save btn--edit-save">Mentés</a>
+          <a href="#" id="btn-edit-save" class="btn btn--save btn--green"
+            >Mentés</a
+          >
         </div>
       </div>
-      <div class="test"></div>
-    </main>
+    </section>
   </body>
 </html>

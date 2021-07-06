@@ -1,0 +1,109 @@
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--color-primary);
+  border-right: 1px solid var(--color-primary);
+  &:first-child {
+    border-left: 1px solid var(--color-primary);
+  }
+
+  &::before {
+    @include respond(small) {
+      content: attr(data-realdate) " " attr(data-dayname);
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      padding-left: 1rem;
+      width: 100%;
+      height: 4rem;
+      background-color: var(--color-primary);
+      color: var(--color-secondary);
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+  }
+
+  @include respond(small) {
+    position: relative;
+  }
+
+  &--header {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include respond(medium) {
+      font-size: 1.3rem;
+    }
+
+    @include respond(small) {
+      display: none;
+    }
+  }
+
+  &--hours {
+    @include respond(small) {
+      display: none;
+    }
+  }
+}
+
+.hidden {
+  opacity: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.highlight {
+  cursor: pointer;
+  display: inline-block;
+  color: #fff;
+  background-color: #0080d6;
+  border: 1px solid var(--color-primary);
+  border-radius: 5rem;
+  padding: 0.2rem 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  transition: all 0.3s;
+
+  @include respond(medium) {
+    padding: 0.1rem 0.5rem;
+    transform: none;
+  }
+}
+
+.request {
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.request.highlight {
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+
+.draggable {
+  display: inline-block;
+  background-color: #f3f3f3;
+  padding: 0.2rem 1rem;
+  border-radius: 5rem;
+  border: 1px solid #000;
+  cursor: move;
+  transition: all 0.3s ease-in-out;
+
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
+
+.dragging {
+  opacity: 0.6;
+}

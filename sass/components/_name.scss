@@ -1,0 +1,9 @@
+.name {
+  transition: all 0.3s;
+  position: relative;
+  z-index: 30;
+  &:not(:last-child)::after {
+    content: ", ";
+    white-space: pre;
+  }
+}

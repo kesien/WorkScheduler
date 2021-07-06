@@ -1,0 +1,85 @@
+.btn {
+  border: none;
+  background: transparent;
+  padding: 1.6rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  text-decoration: none;
+  font-weight: 700;
+
+  @include respond(small) {
+    font-size: 1.6rem;
+  }
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &--arrow {
+    padding: 0;
+    font-size: 4rem;
+    color: var(--color-green);
+
+    @include respond(medium) {
+      font-size: 3rem;
+    }
+    &:active,
+    &:hover {
+      color: var(--color-green-dark);
+    }
+  }
+
+  &--save {
+    &:link,
+    &:visited {
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+  }
+
+  &--footer {
+    font-size: 1.8rem;
+    margin-top: 1rem;
+
+    @include respond(small) {
+      flex: 0 0 100%;
+    }
+
+    &:not(:first-child) {
+      margin-left: 1rem;
+
+      @include respond(small) {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &--green {
+    background-color: var(--color-green);
+    color: var(--color-white);
+
+    &:hover {
+      background-color: var(--color-green-dark);
+    }
+  }
+
+  &--primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  &--print {
+    display: none;
+    margin-right: auto;
+
+    @include respond(small) {
+      margin-right: 0;
+    }
+  }
+}

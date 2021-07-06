@@ -1,9 +1,36 @@
 /* =======================
 Date related variables
 ======================= */
-const napok = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
-const germanWeekDays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"];
-const months = ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"];
+const dayNames = [
+  "Hétfő",
+  "Kedd",
+  "Szerda",
+  "Csütörtök",
+  "Péntek",
+  "Szombat",
+  "Vasárnap",
+];
+const germanWeekDays = [
+  "Montag",
+  "Dienstag",
+  "Mittwoch",
+  "Donnerstag",
+  "Freitag",
+];
+const months = [
+  "Január",
+  "Február",
+  "Március",
+  "Április",
+  "Május",
+  "Június",
+  "Július",
+  "Augusztus",
+  "Szeptember",
+  "Október",
+  "November",
+  "December",
+];
 
 const date = new Date();
 let year = date.getFullYear();
@@ -11,35 +38,77 @@ let month = date.getMonth();
 let day = date.getDay();
 let totalWorkDays = 0;
 let workdays = [];
-let wdBackup = [];
+let workdaysBackup = [];
+
+class Workday {
+  constructor(date) {
+    this.date = date;
+    this.personholiday = [];
+    this.eight = [];
+    this.halften = [];
+    this.isHoliday = false;
+    this.eightSpanElements = [];
+    this.halftenSpanElements = [];
+  }
+  calculateMaxPersonsForEight() {
+    return Math.floor((persons.length - this.personholiday.length) / 2);
+  }
+
+  isItMax() {
+    return this.eight.length >= this.calculateMaxPersonsForEight();
+  }
+
+  isAlreadyContains(person) {
+    return (
+      this.personholiday.includes(person) ||
+      this.eight.includes(person) ||
+      this.halften.includes(person)
+    );
+  }
+
+  updatePersonsAtHalfTen() {
+    for (const person of this.halften) {
+      person.halften++;
+    }
+  }
+}
+
 /* End of date relted variables */
 
 /* =======================
 HTML Elements
 ======================= */
-const calendarDiv = document.querySelector('#calendar__body');
-const titleMonth = document.querySelector('.calendar__title');
-const leftBtn = document.querySelector('#left-arrow');
-const rightBtn = document.querySelector('#right-arrow');
-const typeSelect = document.querySelector('#typeSelect');
-const personSelect = document.querySelector('#personSelect');
-const whenSelect = document.querySelector('#whenSelect');
-const personSelectGroup = document.querySelector('.modal__form-group--person');
-const whenSelectGroup = document.querySelector('.modal__form-group--when');
-const modalForm = document.querySelector('.modal__form')
-const modalSaveBtn = document.querySelector('.btn--save-plus');
-const editModalSaveBtn = document.querySelector('.btn--edit-save');
-const startBtn = document.querySelector('.btn--start');
-const resetBtn = document.querySelector('.btn--reset');
-const partialBtn = document.querySelector('.btn--partial');
-const summaryDiv = document.querySelector('.summary');
-const modal = document.getElementById("myModal");
-const modalTitle = document.querySelector('.modal__title');
-const editModal = document.getElementById("editModal");
-const closeButtons = document.querySelectorAll(".modal__close");
-const containers = document.querySelectorAll('.modalcontainer');
-const printBtn = document.querySelector('.btn--print');
 
+/* DIVs */
+const calendarDiv = document.querySelector("#calendar__body");
+const summaryDiv = document.querySelector(".summary");
+const containers = document.querySelectorAll(".modalcontainer");
+
+/* Modals */
+const modal = document.getElementById("myModal");
+const editModal = document.getElementById("editModal");
+const modalForm = document.querySelector(".modal__form");
+const modalTitle = document.querySelector(".modal__title");
+
+/* Select */
+const typeSelect = document.querySelector("#typeSelect");
+const personSelect = document.querySelector("#personSelect");
+const whenSelect = document.querySelector("#whenSelect");
+const personSelectGroup = document.querySelector(".modal__form-group--person");
+const whenSelectGroup = document.querySelector(".modal__form-group--when");
+
+/* Buttons */
+const modalSaveBtn = document.querySelector("#btn-save-plus");
+const editModalSaveBtn = document.querySelector("#btn-edit-save");
+const leftBtn = document.querySelector("#left-arrow");
+const rightBtn = document.querySelector("#right-arrow");
+const closeButtons = document.querySelectorAll(".modal__close");
+const printBtn = document.querySelector("#btn-print");
+const partialBtn = document.querySelector("#btn-partial");
+const resetBtn = document.querySelector("#btn-reset");
+const startBtn = document.querySelector("#btn-start");
+
+const titleMonth = document.querySelector(".calendar__title");
 let calendarDivWorkdays;
 let calendarDivSelectedDay;
 /* End of HTML Elements */
@@ -55,6 +124,7 @@ class Person {
     this.personholiday = 0;
   }
 }
+
 let persons = [
   new Person("Heni"),
   new Person("Anita"),
@@ -62,40 +132,40 @@ let persons = [
   new Person("Judit"),
   new Person("Orsi"),
 ];
-  
-let pBackup = [];
+
+let personsBackup = [];
 /* End of persons */
 
 /* =======================
 Event listeners 
 ======================= */
-leftBtn.addEventListener('click', leftBtnClick);
-rightBtn.addEventListener('click', rightBtnClick);
-typeSelect.addEventListener('change', typeChanged);
-modalSaveBtn.addEventListener('click', modalSaveBtnClick);
-editModalSaveBtn.addEventListener('click', editSave);
-resetBtn.addEventListener('click', resetBtnClick);
-startBtn.addEventListener('click', startBtnClick);
-partialBtn.addEventListener('click', partialReset);
-printBtn.addEventListener('click', printSchedule);
-closeButtons.forEach(closeButton => {
-  closeButton.addEventListener('click', closeModal);
+leftBtn.addEventListener("click", leftBtnClick);
+rightBtn.addEventListener("click", rightBtnClick);
+typeSelect.addEventListener("change", typeChanged);
+modalSaveBtn.addEventListener("click", modalSaveBtnClick);
+editModalSaveBtn.addEventListener("click", editSave);
+resetBtn.addEventListener("click", resetBtnClick);
+startBtn.addEventListener("click", startBtnClick);
+partialBtn.addEventListener("click", partialReset);
+printBtn.addEventListener("click", printSchedule);
+closeButtons.forEach((closeButton) => {
+  closeButton.addEventListener("click", closeModal);
 });
 
-containers.forEach(container => {  
-  container.addEventListener('dragover', containerDragOver);
+containers.forEach((container) => {
+  container.addEventListener("dragover", containerDragOver);
 });
 
 /**
  * Add the mouseover and mouseleave event listeners to all names
  */
 function addEventListeners() {
-  let spans = document.querySelectorAll('.name');
+  let spans = document.querySelectorAll(".name");
   for (let span of spans) {
-    span.addEventListener('mouseover', (e) => {
+    span.addEventListener("mouseover", (e) => {
       highlightName(e);
     });
-    span.addEventListener('mouseleave', (e) => {
+    span.addEventListener("mouseleave", (e) => {
       removeHighlight(e);
     });
   }
@@ -132,14 +202,14 @@ function rightBtnClick() {
  */
 function typeChanged() {
   if (typeSelect.options[typeSelect.selectedIndex].value == "personholiday") {
-    personSelectGroup.classList.remove('hidden');
-    whenSelectGroup.classList.add('hidden');
+    personSelectGroup.classList.remove("hidden");
+    whenSelectGroup.classList.add("hidden");
   } else if (typeSelect.options[typeSelect.selectedIndex].value == "request") {
-    personSelectGroup.classList.remove('hidden');
-    whenSelectGroup.classList.remove('hidden');
+    personSelectGroup.classList.remove("hidden");
+    whenSelectGroup.classList.remove("hidden");
   } else {
-    personSelectGroup.classList.add('hidden');
-    whenSelectGroup.classList.add('hidden');
+    personSelectGroup.classList.add("hidden");
+    whenSelectGroup.classList.add("hidden");
   }
 }
 
@@ -147,12 +217,13 @@ function typeChanged() {
  * Marks the selected day as holiday and update the UI accordingly.
  */
 function addHoliday() {
-  calendarDivSelectedDay.classList.add('calendar__holiday');
+  calendarDivSelectedDay.classList.add("calendar__holiday");
   calendarDivSelectedDay.innerHTML = `<i class="fas fa-grin-beam"></i>`;
-  calendarDivSelectedDay.classList.remove('calendar__selectable');
-  for (workday of workdays) {
+  calendarDivSelectedDay.classList.remove("calendar__selectable");
+  for (const workday of workdays) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.isHoliday = true;
+      break;
     }
   }
   totalWorkDays -= 1;
@@ -162,47 +233,52 @@ function addHoliday() {
  * Increases the selected person's holiday count by 1 and display it's name on the UI.
  */
 function addPersonHoliday() {
-  for (let workday of workdays) {
+  let selectedPerson = persons.filter(
+    (person) =>
+      person.name === personSelect.options[personSelect.selectedIndex].value
+  )[0];
+  for (const workday of workdays) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
-      let selectedPerson = personSelect.options[personSelect.selectedIndex].value
-      workday.personholiday.push({name: selectedPerson, isRequest: false});
-      for (let person of persons) {
-        if (person.name == selectedPerson) {
-          person.personholiday += 1;
-          person.eight += 1; // The person will be scheduled at 9:30 more so it'll be fair by the end of month. 
-        }
-      }
-      let personsOnHoliday = workday.personholiday.map(personObject => personObject.name);
-      let personholidayDiv = calendarDivSelectedDay.querySelector('.calendar__personholiday');
-      personholidayDiv.innertHTML = "";
-      personholidayDiv.innerHTML = `<i class="fas fa-user-slash"></i> Szabadság: ${personsOnHoliday.join(', ')}`;
+      workday.personholiday.push(selectedPerson);
+      selectedPerson.personholiday += 1;
+      selectedPerson.eight += 1;
     }
+    let personsOnHoliday = workday.personholiday.map((person) => person.name);
+    let personholidayDiv = calendarDivSelectedDay.querySelector(
+      ".calendar__personholiday"
+    );
+    personholidayDiv.innertHTML = "";
+    personholidayDiv.innerHTML = `<i class="fas fa-user-slash"></i> Szabadság: ${personsOnHoliday.join(
+      ", "
+    )}`;
+    return;
   }
 }
+
 /**
  * Adds the person's request and update the UI.
  */
 function addRequest() {
   let requestType = whenSelect.options[whenSelect.selectedIndex].value;
   let selectedPerson = personSelect.options[personSelect.selectedIndex].value;
-  for (let workday of workdays) {
+  let person = persons.filter((person) => person.name === selectedPerson)[0];
+
+  for (const workday of workdays) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       if (requestType == 8) {
-        for (let person of persons) {
-          if (person.name == selectedPerson) {
-            person.eight += 1;
-          } // end of if
-        } // end of for
-        workday.eight.push({name: selectedPerson, isRequest: true});
-        calendarDivSelectedDay.querySelector('.calendar__800').innerHTML = createSpan(workday.eight);
-        
-      } else { //end of if
-        workday.halften.push({name: personSelect.options[personSelect.selectedIndex].value, isRequest: true});
-        calendarDivSelectedDay.querySelector('.calendar__930').innerHTML = createSpan(workday.halften);
+        person.eight++;
+        workday.eight.push(person);
+        calendarDivSelectedDay.querySelector(".calendar__800").innerHTML +=
+          createSpan(person, workday.date, true);
+      } else {
+        workday.halften.push(person);
+        calendarDivSelectedDay.querySelector(".calendar__930").innerHTML +=
+          createSpan(person, workday.date, true);
       }
-      addEventListeners(); //end of else
-    } // end of if
-  } // end of for
+      return;
+    }
+  }
+  addEventListeners();
 }
 
 /**
@@ -213,8 +289,8 @@ function modalSaveBtnClick(event) {
   event.preventDefault();
   let type = typeSelect.options[typeSelect.selectedIndex].value;
   backUp();
-  partialBtn.disabled = false;      
-  
+  partialBtn.disabled = false;
+
   if (type == "holiday") {
     addHoliday();
   } else if (type == "personholiday") {
@@ -230,16 +306,16 @@ function modalSaveBtnClick(event) {
  * @param {Event} event - Event
  */
 function highlightName(event) {
-  let spans = document.querySelectorAll('.name');
-  let rows = document.querySelectorAll('.summary-table__row');
+  let spans = document.querySelectorAll(".name");
+  let rows = document.querySelectorAll(".summary-table__row");
   for (let span of spans) {
     if (span.dataset.name == event.target.dataset.name) {
-      span.classList.add('highlight');
+      span.classList.add("highlight");
     }
   }
   for (let row of rows) {
     if (row.dataset.name == event.target.dataset.name) {
-      row.classList.add('summary-table__row--highlight');
+      row.classList.add("summary-table__row--highlight");
     }
   }
 }
@@ -249,16 +325,16 @@ function highlightName(event) {
  * @param {Event} event - Event
  */
 function removeHighlight(event) {
-  let spans = document.querySelectorAll('.name');
-  let rows = document.querySelectorAll('.summary-table__row');
+  let spans = document.querySelectorAll(".name");
+  let rows = document.querySelectorAll(".summary-table__row");
   for (let span of spans) {
     if (span.dataset.name == event.target.dataset.name) {
-      span.classList.remove('highlight');
+      span.classList.remove("highlight");
     }
   }
   for (let row of rows) {
     if (row.dataset.name == event.target.dataset.name) {
-      row.classList.remove('summary-table__row--highlight');
+      row.classList.remove("summary-table__row--highlight");
     }
   }
 }
@@ -274,13 +350,13 @@ function resetBtnClick() {
 function partialReset() {
   printBtn.style.display = "none";
   workdays = [];
-  workdays = [...wdBackup];
+  workdays = [...workdaysBackup];
   startBtn.disabled = false;
-  summaryDiv.classList.add('hidden')
+  summaryDiv.classList.add("hidden");
   partialBtn.disabled = true;
   typeSelect.options[0].disabled = false;
   persons = [];
-  persons = [...pBackup];
+  persons = [...personsBackup];
   refreshCalendar(true);
 }
 
@@ -304,16 +380,15 @@ function startBtnClick() {
 function containerDragOver(event) {
   event.preventDefault();
   const afterElement = getDragAfterElement(this, event.clientX);
-  const draggable = document.querySelector('.dragging');
+  const draggable = document.querySelector(".dragging");
   if (afterElement == null) {
-    this.appendChild(draggable)
+    this.appendChild(draggable);
   } else {
-    this.insertBefore(draggable, afterElement)
+    this.insertBefore(draggable, afterElement);
   }
 }
 
 /* End of event listeners */
-
 
 /* =======================
 Data functions
@@ -322,8 +397,8 @@ Data functions
  * Creates a back up of the workdays and persons arrays.
  */
 function backUp() {
-  wdBackup = JSON.parse(JSON.stringify(workdays));
-  pBackup = JSON.parse(JSON.stringify(persons));
+  workdaysBackup = JSON.parse(JSON.stringify(workdays));
+  personsBackup = JSON.parse(JSON.stringify(persons));
 }
 
 function editSave(data) {
@@ -348,23 +423,28 @@ function editSave(data) {
 }
 
 /**
- * 
+ *
  * @param {Node} container - The HTML Node where the dragging happens
  * @param {Number} x - Coordinate on the X axis
- * @returns 
+ * @returns
  */
 function getDragAfterElement(container, x) {
-  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+  const draggableElements = [
+    ...container.querySelectorAll(".draggable:not(.dragging)"),
+  ];
 
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect()
-    const offset = x - box.left - box.width / 2
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child }
-    } else {
-      return closest
-    }
-  }, { offset: Number.NEGATIVE_INFINITY }).element
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = x - box.left - box.width / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    },
+    { offset: Number.NEGATIVE_INFINITY }
+  ).element;
 }
 
 /**
@@ -392,7 +472,7 @@ function getDay(date) {
  */
 function isWeekend(date) {
   let weekday = getDay(date);
-  return (weekday % 7 == 6 || weekday % 7 == 5);
+  return weekday % 7 == 6 || weekday % 7 == 5;
 }
 
 /**
@@ -404,7 +484,7 @@ function getWorkDays(year, month) {
   totalWorkDays = 0;
   let d = new Date(year, month);
   let totalDays = new Date(year, month + 1, 0).getDate();
-  
+
   for (let i = 1; i <= totalDays; i++) {
     if (!isWeekend(d)) {
       totalWorkDays += 1;
@@ -420,16 +500,10 @@ function getWorkDays(year, month) {
 function populateWorkdays(date) {
   for (let workday of workdays) {
     if (workday == date) {
-      return
+      return;
     }
   }
-  workdays.push({
-    date: date,
-    personholiday: [],
-    eight: [],
-    halften: [],
-    isHoliday: false
-  });
+  workdays.push(new Workday(date));
 }
 
 /**
@@ -447,7 +521,9 @@ function updateEveryPersonInfo() {
  * @param {number} index - Index of the given day.
  */
 function isItMax(index) {
-  let maxPersonCountForEight = Math.floor((persons.length - workdays[index].personholiday.length) / 2);
+  let maxPersonCountForEight = Math.floor(
+    (persons.length - workdays[index].personholiday.length) / 2
+  );
   /* if (index % 2 == 1) {
     maxPersonCountForEight += 1;
   } */
@@ -461,7 +537,9 @@ function isItMax(index) {
  * @returns - True if the given person is on holiday.
  */
 function isPersonOnHoliday(index, person) {
-  let personsOnHoliday = workdays[index].personholiday.filter(personObject => personObject.name == person);
+  let personsOnHoliday = workdays[index].personholiday.filter(
+    (personObject) => personObject.name == person
+  );
   return Boolean(personsOnHoliday.length);
 }
 
@@ -472,8 +550,10 @@ function isPersonOnHoliday(index, person) {
  * @returns - True if the given person is already scheduled for 8:00.
  */
 function isAtEight(index, person) {
-  let eight = workdays[index].eight.filter(personObject => personObject.name == person);
-  return Boolean(eight.length)
+  let eight = workdays[index].eight.filter(
+    (personObject) => personObject.name == person
+  );
+  return Boolean(eight.length);
 }
 
 /**
@@ -483,8 +563,10 @@ function isAtEight(index, person) {
  * @returns - True if the given person is already scheduled for 9:30.
  */
 function isAtHalfTen(index, person) {
-  let halften = workdays[index].halften.filter(personObject => personObject.name == person)
-  return Boolean(halften.length)
+  let halften = workdays[index].halften.filter(
+    (personObject) => personObject.name == person
+  );
+  return Boolean(halften.length);
 }
 
 /**
@@ -493,11 +575,10 @@ function isAtHalfTen(index, person) {
  * @param {Object} randomPerson - A person object.
  */
 function personIsAlreadyAdded(index, randomPerson) {
-  
-  let isEight = isAtEight(index, randomPerson.name)
-  let isHalfTen = isAtHalfTen(index, randomPerson.name)
-  let isHoliday = isPersonOnHoliday(index, randomPerson.name)
-  return (isEight || isHalfTen || isHoliday);
+  let isEight = isAtEight(index, randomPerson.name);
+  let isHalfTen = isAtHalfTen(index, randomPerson.name);
+  let isHoliday = isPersonOnHoliday(index, randomPerson.name);
+  return isEight || isHalfTen || isHoliday;
 }
 
 /**
@@ -506,7 +587,7 @@ function personIsAlreadyAdded(index, randomPerson) {
  * @param {string} name - Name of the person
  */
 function personAlreadyScheduled(index, name) {
-  return (isAtEight(index, name) || isAtHalfTen(index, name));
+  return isAtEight(index, name) || isAtHalfTen(index, name);
 }
 
 /**
@@ -545,76 +626,110 @@ function updatePersonsAtEight(index) {
  */
 function createSchedule() {
   let max = 1; // A helper variable which is increased by 1 every second loop.
+  let index = 0;
   for (let workday of workdays) {
-    let index = workdays.indexOf(workday) // index of the day
-    let maxPersonCountForEight = Math.floor((persons.length - workday.personholiday.length) / 2)
-    let personsNotOnHolidays  = persons.filter(person => !isPersonOnHoliday(index, person.name)); // get every person who is not on holiday
-    let names = personsNotOnHolidays.map(person => person.name); // get the names of the selected persons
+    let personsNotOnHolidays = persons.filter(
+      (person) => !workday.personholiday.includes(person)
+    ); // get every person who is not on holiday
 
-    if(workday.isHoliday) { 
+    if (workday.isHoliday) {
       continue; // Skip the day if it's holiday.
     }
 
-    while(true) {
-      if (isItMax(index)) {
+    while (true) {
+      if (workday.isItMax()) {
         break; //Break out of the loop if reach the maximum amount of people for eight.
       }
 
       // We want to fairly distribute so we filter out the people who were scheduled for 9:30 at the previous day.
       let filtered;
       if (index % 2 == 1) {
-        if(!workdays[index-1].isHoliday) {
-          filtered = personsNotOnHolidays.filter(person => isAtHalfTen(index-1, person.name) && !personAlreadyScheduled(index, person.name));
+        let previousDay = workdays[workdays.indexOf(workday) - 1];
+        if (!previousDay.isHoliday) {
+          filtered = personsNotOnHolidays.filter(
+            (person) =>
+              previousDay.halften.includes(person) &&
+              !workday.eight.includes(person) &&
+              !workday.halften.includes(person)
+          );
         } else {
-          filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
+          filtered = personsNotOnHolidays.filter(
+            (person) =>
+              person.eight < max &&
+              !workday.eight.includes(person) &&
+              !workday.halften.includes(person)
+          );
         }
         filtered = [...filtered, ...workday.eight];
-        if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
-          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
-          let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
+        if (
+          filtered.length + workday.eight.length <
+          workday.maxPersonCountForEight
+        ) {
+          let plusPerson = personsNotOnHolidays.filter(
+            (person) =>
+              !filtered.includes(person) &&
+              !workday.eight.includes(person) &&
+              !workday.halften.includes(person)
+          );
+          let plusRandomPerson =
+            plusPerson[Math.floor(Math.random() * plusPerson.length)];
           filtered.push(plusRandomPerson);
         }
-        while(workday.eight.length != filtered.length) {
-          if(workday.eight.length == Math.round(personsNotOnHolidays.length / 2)) {
+        while (workday.eight.length != filtered.length) {
+          if (
+            workday.eight.length == Math.round(personsNotOnHolidays.length / 2)
+          ) {
             break;
           }
-          let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
-          if (personIsAlreadyAdded(index, randomPerson)) {
+          let randomPerson =
+            filtered[Math.floor(Math.random() * filtered.length)];
+          if (workday.isAlreadyContains(randomPerson)) {
             continue; // Skip the person if it's already scheduled
-          }   
-          workday.eight.push({name: randomPerson.name, isRequest: false});
+          }
+          workday.eight.push(randomPerson);
           persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
         }
       } else {
-        filtered = personsNotOnHolidays.filter(person => person.eight < max && !personAlreadyScheduled(index, person.name));
-        if ((filtered.length + workday.eight.length) < maxPersonCountForEight) {
-          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && !personAlreadyScheduled(index, person.name));
-          let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
+        filtered = personsNotOnHolidays.filter(
+          (person) =>
+            person.eight < max &&
+            !workday.eight.includes(person) &&
+            !workday.halften.includes(person)
+        );
+        if (
+          filtered.length + workday.eight.length <
+          workday.maxPersonCountForEight
+        ) {
+          let plusPerson = personsNotOnHolidays.filter(
+            (person) =>
+              !filtered.includes(person) &&
+              !workday.eight.includes(person) &&
+              !workday.halften.includes(person)
+          );
+          let plusRandomPerson =
+            plusPerson[Math.floor(Math.random() * plusPerson.length)];
           filtered.push(plusRandomPerson);
         }
-        let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
-        if (personIsAlreadyAdded(index, randomPerson)) {
+        let randomPerson =
+          filtered[Math.floor(Math.random() * filtered.length)];
+        if (workday.isAlreadyContains(randomPerson)) {
           continue; // Skip the person if it's already scheduled
         }
-  
-        workday.eight.push({name: randomPerson.name, isRequest: false});
-        persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
-      }
 
-/*       if (index != 0) {
-        // If we don't have the required amount of people (because of requests) we randomly select additional ones.
-        
-      } */
+        workday.eight.push(randomPerson);
+        randomPerson.eight++;
+      }
     }
 
     // Schedule the remaining persons for 9:30
-    let remainingPersons = names.filter(name => !personAlreadyScheduled(index, name));
-    let remainingObjects = remainingPersons.map(person => { return {name: person, isRequest: false}});
-    workday.halften = workday.halften.concat(remainingObjects);
-
-    updatePersonsAtHalfTen(index);
-
-    max = index % 2 == 1 ? max += 1 : max // Increase max by 1 for every second iteration.
+    let remainingPersons = personsNotOnHolidays.filter(
+      (person) =>
+        !workday.eight.includes(person) && !workday.halften.includes(person)
+    );
+    workday.halften = workday.halften.concat(remainingPersons);
+    workday.updatePersonsAtHalfTen();
+    max = index % 2 == 1 ? (max += 1) : max; // Increase max by 1 for every second iteration.
+    index++;
   }
 }
 
@@ -628,38 +743,44 @@ UI functions
  * Create HTML span element with the given data.
  * @param {Array} data - Array of persons
  */
-function createSpan(data, date) {
-  let spans = data.map(person => {
-    let isRequest = person.isRequest ? 'request' : ''
-    return `<span class='name ${isRequest}' data-date=${date} data-name='${person.name}'>${person.name}</span>`}
-    );
-  return spans.join('');
+function createSpan(person, date, isRequest = false) {
+  return `<span class='name ${
+    isRequest ? "request" : ""
+  }' data-date=${date} data-name='${person.name}'>${person.name}</span>`;
 }
 
 /**
  * Updates the UI with the schedule.
  */
 function refreshCalendar(isPartialRefresh = false) {
-  for (let calendarDivWorkday of calendarDivWorkdays) {
-    let eight = calendarDivWorkday.querySelector(".calendar__800");
-    let halften = calendarDivWorkday.querySelector(".calendar__930");
-    for (let workday of workdays) {
-      if (workday.date == calendarDivWorkday.dataset.day) {
-        if(workday.isHoliday) {
-          continue;
-        }
-        eight.innerHTML = createSpan(workday.eight, workday.date);
-        halften.innerHTML = createSpan(workday.halften, workday.date);
-        addEventListeners();
+  for (const calendarDivWorkday of calendarDivWorkdays) {
+    const eight = calendarDivWorkday.querySelector(".calendar__800");
+    const halften = calendarDivWorkday.querySelector(".calendar__930");
+    const currentDate = calendarDivWorkday.dataset.day;
+    const spanElements = calendarDivWorkday.querySelectorAll(".name");
+    const workdayToDisplay = workdays.filter(
+      (workday) => workday.date === currentDate
+    )[0];
+    let names = [];
+    spanElements.forEach((span) => names.push(span.innerText));
+    for (const person of workdayToDisplay.eight) {
+      if (!names.includes(person.name)) {
+        eight.innerHTML += createSpan(person, workdayToDisplay.date);
+      }
+    }
+    for (const person of workdayToDisplay.halften) {
+      if (!names.includes(person.name)) {
+        halften.innerHTML += createSpan(person, workdayToDisplay.date);
       }
     }
     if (!isPartialRefresh) {
-      calendarDivWorkday.classList.remove('calendar__selectable');
-      calendarDivWorkday.classList.add('calendar__editable');
+      calendarDivWorkday.classList.remove("calendar__selectable");
+      calendarDivWorkday.classList.add("calendar__editable");
     } else {
-      calendarDivWorkday.classList.add('calendar__selectable');
+      calendarDivWorkday.classList.add("calendar__selectable");
     }
   }
+  addEventListeners();
 }
 
 /**
@@ -667,12 +788,12 @@ function refreshCalendar(isPartialRefresh = false) {
  */
 function reset() {
   workdays = [];
-  wdBackup = [];
-  pBackup = [];
+  workdaysBackup = [];
+  personsBackup = [];
   startBtn.disabled = false;
   partialBtn.disabled = true;
   printBtn.style.display = "none";
-  summaryDiv.classList.add('hidden')
+  summaryDiv.classList.add("hidden");
   typeSelect.options[0].disabled = false;
   totalWorkDays = 0;
   for (let person of persons) {
@@ -711,7 +832,7 @@ function showSummary() {
   }
   table += "</tbody></table>";
   summaryDiv.innerHTML += table;
-  summaryDiv.classList.remove('hidden');
+  summaryDiv.classList.remove("hidden");
 }
 
 /**
@@ -720,13 +841,15 @@ function showSummary() {
  */
 function getCell(date) {
   let curDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-  let realDate = `0${date.getMonth() + 1}-${day}`
+  let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  let realDate = `0${date.getMonth() + 1}-${day}`;
 
   if (!isWeekend(date)) {
     populateWorkdays(curDate);
     return `
-    <div class='cell calendar__selectable' data-day=${curDate} data-realdate=${realDate} data-dayname=${napok[getDay(date)]}>
+    <div class='cell calendar__selectable' data-day=${curDate} data-realdate=${realDate} data-dayname=${
+      dayNames[getDay(date)]
+    }>
       <span class='calendar__plus-icon' data-day=${curDate}><i class='fas fa-plus'></i></span>
       <span class='calendar__edit-icon'><i class='fas fa-edit'></i></span>
       <div class='calendar__day'>
@@ -751,15 +874,30 @@ function getCell(date) {
  * @param {string} data - Date string e.g.: 2021-06-01
  */
 function showModal(data) {
-  let year, month, day;
-  [year, month, day] = data.split('-');
+  let [year, month, day] = data.split("-");
+  let workday = workdays.filter((workday) => workday.date == data)[0];
+  let personsToSelect = persons.filter(
+    (person) => !personIsAlreadyAdded(workdays.indexOf(workday), person)
+  );
   resetModals();
-  let dayData = workdays.filter(workday => workday.date == data).map(day => {return day.personholiday.length + day.eight.length + day.halften.length});
+  let personSelect = modal.querySelector("#personSelect");
+  personSelect.innerHTML = "";
+  for (const person of personsToSelect) {
+    let option = document.createElement("OPTION");
+    option.value = person.name;
+    option.innerText = person.name;
+    personSelect.appendChild(option);
+  }
+  let dayData = workdays
+    .filter((workday) => workday.date == data)
+    .map((day) => {
+      return day.personholiday.length + day.eight.length + day.halften.length;
+    });
   // Disable holiday option of the day already includes a person.
   if (dayData[0] != 0) {
     typeSelect.selectedIndex = 1;
     typeSelect.options[0].disabled = true;
-    personSelectGroup.classList.remove('hidden');
+    personSelectGroup.classList.remove("hidden");
   }
   let title = year + ". " + months[month] + " " + day + ".";
   modalTitle.innerText = title;
@@ -768,72 +906,81 @@ function showModal(data) {
 
 function showEditModal(data) {
   let year, month, day;
-  [year, month, day] = data.split('-');
-  editModal.querySelector('.date-data').value = data;
+  [year, month, day] = data.split("-");
+  editModal.querySelector(".date-data").value = data;
   resetModals();
-  let dayData = workdays.filter(workday => workday.date == data);
+  let dayData = workdays.filter((workday) => workday.date == data);
   if (dayData[0] != 0) {
     let title = year + ". " + months[month] + " " + day + ".";
-    editModal.querySelector('.modal__title').innerText = title;
-    let eight = dayData[0].eight.map(personObject => {
-      return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`
+    editModal.querySelector(".modal__title").innerText = title;
+    let eight = dayData[0].eight.map((personObject) => {
+      return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`;
     });
-    let halften = dayData[0].halften.map(personObject => {
-      return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`
+    let halften = dayData[0].halften.map((personObject) => {
+      return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`;
     });
-    let holiday = dayData[0].personholiday.map(personObject => {
+    let holiday = dayData[0].personholiday.map((personObject) => {
       return `<div class="modal__holiday-name" data-name="${personObject.name}">${personObject.name}
                 <span class='remove'><i class="far fa-times-circle"></i></span>
               </div>`;
-    })
-    
-    editModal.querySelector('.modal__800').innerHTML = eight.join('');
-    editModal.querySelector('.modal__930').innerHTML = halften.join('');
-    editModal.querySelector('.modal__holiday-list').innerHTML = holiday.join('');
-    const draggables = editModal.querySelectorAll('.draggable');
-    const removeIcons = editModal.querySelectorAll('.remove');
+    });
 
-    draggables.forEach(draggable => {
-      draggable.addEventListener('dragstart', () => {
-        draggable.classList.add('dragging');
+    editModal.querySelector(".modal__800").innerHTML = eight.join("");
+    editModal.querySelector(".modal__930").innerHTML = halften.join("");
+    editModal.querySelector(".modal__holiday-list").innerHTML =
+      holiday.join("");
+    const draggables = editModal.querySelectorAll(".draggable");
+    const removeIcons = editModal.querySelectorAll(".remove");
+
+    draggables.forEach((draggable) => {
+      draggable.addEventListener("dragstart", () => {
+        draggable.classList.add("dragging");
       });
-      draggable.addEventListener('dragend', () => {
-        draggable.classList.remove('dragging');
+      draggable.addEventListener("dragend", () => {
+        draggable.classList.remove("dragging");
       });
-      draggable.addEventListener('touchmove', () => {
-        draggable.classList.add('dragging');
-      }, { passive: true });
-      draggable.addEventListener('touchend', () => {
-        draggable.classList.remove('dragging');
+      draggable.addEventListener(
+        "touchmove",
+        () => {
+          draggable.classList.add("dragging");
+        },
+        { passive: true }
+      );
+      draggable.addEventListener("touchend", () => {
+        draggable.classList.remove("dragging");
       });
     });
 
-    removeIcons.forEach(removeIcon => {
-      removeIcon.addEventListener('click', removeHoliday);
-    })
+    removeIcons.forEach((removeIcon) => {
+      removeIcon.addEventListener("click", removeHoliday);
+    });
     editModal.style.display = "flex";
   }
 }
 
 function removeHoliday() {
-  let name = this.parentElement.dataset.name
-  let date = editModal.querySelector('.date-data').value;
-  let workday = workdays.filter(workday => workday.date == date);
-  let p = workday[0].personholiday.filter(person => person.name == name)
-  workday[0].personholiday = workday[0].personholiday.filter(person => person != p[0]);
+  let name = this.parentElement.dataset.name;
+  let date = editModal.querySelector(".date-data").value;
+  let workday = workdays.filter((workday) => workday.date == date);
+  let p = workday[0].personholiday.filter((person) => person.name == name);
+  workday[0].personholiday = workday[0].personholiday.filter(
+    (person) => person != p[0]
+  );
   let newDraggable = document.createElement("SPAN");
   newDraggable.innerHTML = `<i class="fas fa-arrows-alt"></i> ${name}`;
   newDraggable.dataset.name = name;
   newDraggable.draggable = true;
-  newDraggable.classList.add('draggable');
-  editModal.querySelector('.modal__holiday-list').removeChild(this.parentElement);
-  editModal.querySelector('.modal__unscheduled').appendChild(newDraggable);
-  newDraggable.addEventListener('dragstart', () => {
-    newDraggable.classList.add('dragging');
+  newDraggable.classList.add("draggable");
+  editModal
+    .querySelector(".modal__holiday-list")
+    .removeChild(this.parentElement);
+  editModal.querySelector(".modal__unscheduled").appendChild(newDraggable);
+  newDraggable.addEventListener("dragstart", () => {
+    newDraggable.classList.add("dragging");
   });
 
-  newDraggable.addEventListener('dragend', () => {
-    newDraggable.classList.remove('dragging');
+  newDraggable.addEventListener("dragend", () => {
+    newDraggable.classList.remove("dragging");
   });
 }
 
@@ -842,8 +989,8 @@ function removeHoliday() {
  */
 function resetModals() {
   modalForm.reset();
-  personSelectGroup.classList.add('hidden');
-  whenSelectGroup.classList.add('hidden');
+  personSelectGroup.classList.add("hidden");
+  whenSelectGroup.classList.add("hidden");
 }
 
 /**
@@ -860,27 +1007,33 @@ function closeModal() {
  * @param {number} month - Month
  */
 function createCalendar(year, month) {
-  let dayCells = napok.map(nap => { return `<div class="cell--header">${nap}</div>`}).join('');
+  let dayCells = dayNames
+    .map((day) => {
+      return `<div class="cell--header">${day}</div>`;
+    })
+    .join("");
   let table = `
   <div class="calendar__table">
     <div class="cell--header"><i class="fas fa-clock"></i></div>
     ${dayCells}
   `;
   let d = new Date(year, month);
-  table += "<div class='cell cell--hours'><div class='calendar__day calendar__day--hours'><div class='calendar__day--half'>8:00</div><div class='calendar__day--half'>9:30</div></div></div>";
+  table +=
+    "<div class='cell cell--hours'><div class='calendar__day calendar__day--hours'><div class='calendar__day--half'>8:00</div><div class='calendar__day--half'>9:30</div></div></div>";
 
   // Add empty cells
   for (let i = 0; i < getDay(d); i++) {
-    table += "<div class='cell calendar__day--empty'><i class='fas fa-ban'></i></div>";
+    table +=
+      "<div class='cell calendar__day--empty'><i class='fas fa-ban'></i></div>";
   }
 
   while (d.getMonth() == month) {
     table += getCell(d);
-    
+
     // Add a new row if it's end of week
     if (getDay(d) % 7 == 6) {
       let next = new Date(year, month, d.getDate() + 1);
-      if(next.getMonth() == month) {
+      if (next.getMonth() == month) {
         table += `<div class='cell cell--hours'>
                     <div class='calendar__day calendar__day--hours'>
                       <div class='calendar__day--half'>8:00</div>
@@ -888,7 +1041,6 @@ function createCalendar(year, month) {
                     </div>
                   </div>`;
       }
-
     }
     d.setDate(d.getDate() + 1);
   }
@@ -902,18 +1054,18 @@ function createCalendar(year, month) {
     }
   }
 
-  table += '</div>';
+  table += "</div>";
   calendarDiv.innerHTML = table;
-  calendarDivWorkdays = document.querySelectorAll('.calendar__selectable');
+  calendarDivWorkdays = document.querySelectorAll(".calendar__selectable");
 
-  calendarDivWorkdays.forEach(cd => {
-    cd.querySelector('.calendar__plus-icon').addEventListener('click', () => {
+  calendarDivWorkdays.forEach((cd) => {
+    cd.querySelector(".calendar__plus-icon").addEventListener("click", () => {
       calendarDivSelectedDay = cd;
       showModal(cd.dataset.day);
     });
-    cd.querySelector('.calendar__edit-icon').addEventListener('click', () => {
+    cd.querySelector(".calendar__edit-icon").addEventListener("click", () => {
       showEditModal(cd.dataset.day);
-    })
+    });
   });
 }
 
@@ -934,23 +1086,23 @@ function createPrintSummary() {
                   <td>${person.personholiday}</td>
                 </tr>`;
   }
-  summary += '</table></div>';
+  summary += "</table></div>";
   return summary;
 }
 
 function createPrintTable() {
   let d = new Date(year, month);
   let content = `<div class='container'><table class='schedule'><thead><tr><th>&nbsp;</th><th><div>Montag</div></th><th><div>Dienstag</div></th>`;
-  content += `<th><div>Mittwoch</div></th><th><div>Donnerstag</div></th><th><div>Freitag</div></th></tr></thead><tbody>`
-  
+  content += `<th><div>Mittwoch</div></th><th><div>Donnerstag</div></th><th><div>Freitag</div></th></tr></thead><tbody>`;
+
   let daterow = `<tr><td>&nbsp;</td>`;
-  let schedulerow = `<tr><td><div class='hours'><div class='eight'>8:00-16:30</div><div class='halften'>9:30-18:00</div></div></td>`
-  while(isWeekend(d)) {
+  let schedulerow = `<tr><td><div class='hours'><div class='eight'>8:00-16:30</div><div class='halften'>9:30-18:00</div></div></td>`;
+  while (isWeekend(d)) {
     d.setDate(d.getDate() + 1);
   }
   for (let i = 0; i < getDay(d); i++) {
     daterow += `<td><div class='date'>&nbsp;</div></td>`;
-    schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`
+    schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`;
   }
 
   while (d.getMonth() == month) {
@@ -958,13 +1110,14 @@ function createPrintTable() {
 
     // We want to show the date in a readable format.
     let displayDay = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
-    let displayMonth = (d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : d.getMonth();
+    let displayMonth =
+      d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth();
     let displayDate = `${displayDay}.${displayMonth}.${d.getFullYear()}`;
 
-    let workday = workdays.filter(workday => workday.date == curDate);
+    let workday = workdays.filter((workday) => workday.date == curDate);
     if (getDay(d) % 7 == 6) {
-      daterow += '</tr>';
-      schedulerow += '</tr>';
+      daterow += "</tr>";
+      schedulerow += "</tr>";
       content += daterow;
       content += schedulerow;
       daterow = `<tr><td>&nbsp;</td>`;
@@ -975,84 +1128,93 @@ function createPrintTable() {
       continue;
     }
     let holiday = [...workday[0].personholiday];
-    let eight = workday[0].eight.map(personObject => {
-      if(personObject.isRequest) {
-        return `<div class='name request'>${personObject.name}</div>`
+    let eight = workday[0].eight.map((personObject) => {
+      if (personObject.isRequest) {
+        return `<div class='name request'>${personObject.name}</div>`;
       } else {
-        return `<div class='name'>${personObject.name}</div>`
+        return `<div class='name'>${personObject.name}</div>`;
       }
     });
 
-    let halften = workday[0].halften.map(personObject => {
-      if(personObject.isRequest) {
-        return `<div class='name request'>${personObject.name}</div>`
+    let halften = workday[0].halften.map((personObject) => {
+      if (personObject.isRequest) {
+        return `<div class='name request'>${personObject.name}</div>`;
       } else {
-        return `<div class='name'>${personObject.name}</div>`
+        return `<div class='name'>${personObject.name}</div>`;
       }
     });
 
-    while(eight.length < 3) {
+    while (eight.length < 3) {
       if (eight.length == 1 && holiday.length > 1) {
         eight.push(`<div class='name'>&nbsp;</div>`);
-        eight.push(`<div class='name holiday'>${holiday.pop().name} (ferien)</div>`);
-      } else if(eight.length == 2 && holiday.length > 1) {
-        eight.push(`<div class='name holiday'>${holiday.pop().name} (ferien)</div>`);
-      }else {
+        eight.push(
+          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
+        );
+      } else if (eight.length == 2 && holiday.length > 1) {
+        eight.push(
+          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
+        );
+      } else {
         eight.push(`<div class='name'>&nbsp;</div>`);
       }
     }
-    while(halften.length < 3) {
+    while (halften.length < 3) {
       if (halften.length == 1 && holiday.length != 0) {
         halften.push(`<div class='name'>&nbsp;</div>`);
-        halften.push(`<div class='name holiday'>${holiday.pop().name} (ferien)</div>`);
+        halften.push(
+          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
+        );
       } else if (halften.length == 2 && holiday.length != 0) {
-        halften.push(`<div class='name holiday'>${holiday.pop().name} (ferien)</div>`);
+        halften.push(
+          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
+        );
       } else {
         halften.push(`<div class='name'>&nbsp;</div>`);
       }
     }
 
     daterow += `<td><div class='date'>${displayDate}</div></td>`;
-    schedulerow += `<td><div class='names'>${eight.join('')}</div><div class='names'>${halften.join('')}</div></td>`;
+    schedulerow += `<td><div class='names'>${eight.join(
+      ""
+    )}</div><div class='names'>${halften.join("")}</div></td>`;
     d.setDate(d.getDate() + 1);
   }
-  
+
   if (getDay(d) != 0) {
     for (let i = getDay(d); i < 5; i++) {
       daterow += `<td><div class='date'>&nbsp;</div></td>`;
-      schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`
+      schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`;
     }
   }
   content += daterow;
   content += schedulerow;
-  content += `</tbody></table>`
+  content += `</tbody></table>`;
   content += createPrintSummary();
   return content;
-
 }
 
 function printSchedule() {
-  let printWindow = window.open('', '', 'height=750,width=1150');  
-  printWindow.document.write('<html><head>');  
-  printWindow.document.write('<link rel="stylesheet" href="print.css"/>')
-  printWindow.document.write('</head><body>');  
-  printWindow.document.write(createPrintTable());  
-  printWindow.document.write('</body></html>');  
-  printWindow.addEventListener('load', () => {
+  let printWindow = window.open("", "", "height=750,width=1150");
+  printWindow.document.write("<html><head>");
+  printWindow.document.write('<link rel="stylesheet" href="print.css"/>');
+  printWindow.document.write("</head><body>");
+  printWindow.document.write(createPrintTable());
+  printWindow.document.write("</body></html>");
+  printWindow.addEventListener("load", () => {
     printWindow.print();
-  })
-  printWindow.document.close();  
-}  
+  });
+  printWindow.document.close();
+}
 
 /**
  * When the user clicks anywhere outside of the modal, close it
  * @param {Event} event - Event
  */
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (event.target == modal || event.target == editModal) {
     closeModal();
   }
-}
+};
 
 /**
  * Renders the UI

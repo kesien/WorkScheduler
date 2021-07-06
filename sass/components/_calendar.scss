@@ -1,0 +1,306 @@
+.calendar {
+  &__header {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @include respond(medium) {
+      padding: 0.5rem 0;
+    }
+
+    @include respond(small) {
+      padding: 0 0.5rem;
+    }
+  }
+
+  &__title {
+    font-size: 3.6rem;
+    font-weight: 400;
+    letter-spacing: 0.3rem;
+    text-align: center;
+
+    @include respond(medium) {
+      font-size: 3rem;
+    }
+  }
+
+  &__body {
+  }
+
+  &__table {
+    font-size: 1.6rem;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 5% repeat(7, 13.57%);
+    grid-template-rows: 5rem;
+    grid-auto-rows: 14rem;
+
+    @include respond(medium) {
+      font-size: 1.4rem;
+      grid-template-columns: 7% repeat(7, 13.28%);
+    }
+
+    @include respond(small) {
+      grid-template-rows: 20rem;
+      grid-auto-rows: 20rem;
+      grid-template-columns: 100%;
+      row-gap: 2rem;
+      overflow: hidden;
+    }
+  }
+
+  &__day {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+
+    &--hours {
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--color-white);
+      background-color: var(--color-green);
+      width: 100%;
+      height: 100%;
+    }
+
+    &--half {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:nth-of-type(even) {
+        background-color: var(--color-green-dark);
+      }
+    }
+
+    &--empty {
+      font-size: 4.2rem;
+      color: var(--color-white);
+      background-color: var(--color-red);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+
+      @include respond(medium) {
+        font-size: 4rem;
+      }
+
+      @include respond(small) {
+        display: none !important;
+      }
+    }
+  }
+
+  &__daynumber {
+    font-size: 5rem;
+    font-weight: 400;
+    color: var(--color-primary-dark);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.1;
+    z-index: 15;
+
+    @include respond(medium) {
+      font-size: 4rem;
+    }
+
+    @include respond(small) {
+      display: none !important;
+    }
+  }
+
+  &__personholiday {
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--color-green-dark);
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    @include respond(small) {
+      height: 4rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 1rem;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+  }
+
+  &__800,
+  &__930 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include respond(medium) {
+      flex-direction: column;
+    }
+
+    @include respond(small) {
+      position: relative;
+      flex-direction: row;
+      font-size: 1.6rem;
+      padding-left: 30%;
+      justify-content: flex-start;
+    }
+
+    &::before {
+      @include respond(small) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-secondary);
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+    }
+  }
+
+  &__800 {
+    background-color: var(--color-secondary);
+
+    @include respond(small) {
+      margin-top: 4rem;
+    }
+
+    &::before {
+      @include respond(small) {
+        content: "8:00";
+        background-color: var(--color-green);
+      }
+    }
+  }
+
+  &__930 {
+    background-color: var(--color-secondary-dark);
+
+    &::before {
+      @include respond(small) {
+        content: "9:30";
+        background-color: var(--color-green-dark);
+      }
+    }
+  }
+
+  &__selectable,
+  &__editable {
+    position: relative;
+  }
+
+  &__plus-icon,
+  &__edit-icon {
+    color: #fff;
+    cursor: pointer;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+
+  &__selectable:hover &__plus-icon {
+    display: flex;
+    opacity: 1;
+    box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.4);
+  }
+
+  &__edit-icon {
+    display: none;
+    right: 0;
+    top: 0;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    color: #2ecc71;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      color: #27ae60;
+    }
+  }
+
+  &__plus-icon {
+    font-size: 3rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 7rem;
+    width: 7rem;
+    background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    border-radius: 50%;
+    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+    @include respond(small) {
+      margin-left: 10%;
+      margin-top: 2rem;
+    }
+  }
+
+  &__weekend {
+    background-color: var(--color-blue);
+    position: relative;
+
+    @include respond(small) {
+      display: none !important;
+    }
+  }
+
+  &__weekend &__daynumber {
+    color: var(--color-secondary);
+    opacity: 0.7;
+  }
+
+  &__holiday {
+    background-color: var(--color-red);
+    position: relative;
+    color: var(--color-secondary);
+    font-size: 4.2rem;
+    text-shadow: 0.1rem 0.1rem 0.3rem rgba(0, 0, 0, 0.4);
+
+    @include respond(medium) {
+      font-size: 4rem;
+    }
+
+    @include respond(small) {
+      padding-top: 4rem;
+      font-size: 5rem;
+    }
+  }
+
+  &__holiday > &__800 {
+    border-bottom: none;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+
+    @include respond(small) {
+      flex-direction: column-reverse;
+    }
+  }
+}

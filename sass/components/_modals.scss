@@ -1,0 +1,163 @@
+.modal {
+  color: #000;
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+
+  &__header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: var(--color-primary);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__content {
+    font-size: 1.8rem;
+    background-color: #fefefe;
+    border-radius: 0.3rem;
+    min-width: 500px; /* Could be more or less, depending on screen size */
+    max-width: 25%;
+    overflow: hidden;
+
+    @include respond(small) {
+      min-width: 90%;
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.6rem;
+    }
+
+    select {
+      font-size: inherit;
+      background-color: var(--color-primary-dark);
+      border: none;
+      padding: 1rem 0.5rem;
+      color: var(--color-white);
+
+      &:active,
+      &:focus {
+        outline: none;
+      }
+
+      option {
+        background-color: var(--color-primary);
+      }
+    }
+  }
+
+  &__close {
+    &:link,
+    &:visited {
+      color: #aaa;
+    }
+
+    &:hover,
+    &:focus {
+      color: red;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__holiday {
+    font-size: 1.8rem;
+    padding: 1rem;
+    display: flex;
+    background-color: #aadafa;
+  }
+
+  &__holiday-list {
+    display: flex;
+  }
+
+  &__holiday-name {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+
+    &:not(:last-of-type)::after {
+      content: ", ";
+      white-space: pre;
+    }
+
+    span {
+      color: red;
+      font-weight: 700;
+      margin-left: 3px;
+      cursor: pointer;
+
+      i {
+        color: #777;
+      }
+    }
+  }
+
+  &__hour {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+
+    &--1 {
+      background-color: var(--color-green);
+    }
+
+    &--2 {
+      background-color: var(--color-green-dark);
+    }
+  }
+
+  &__800,
+  &__930 {
+    flex: 1;
+    height: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 1rem;
+  }
+
+  &__800 {
+    background-color: var(--color-secondary);
+  }
+
+  &__930 {
+    background-color: var(--color-secondary-dark);
+  }
+
+  &__form {
+    padding: 1rem;
+  }
+
+  &__form-group {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 1rem 0;
+
+    label {
+      flex-grow: 2;
+    }
+  }
+}

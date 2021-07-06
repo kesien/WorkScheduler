@@ -1,0 +1,37 @@
+.summary-table {
+  width: 40%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  color: #000;
+
+  @include respond(medium) {
+    width: 100%;
+  }
+
+  th {
+    background-color: #0080d6;
+    color: #fff;
+  }
+
+  th,
+  td {
+    border: 1px solid #333;
+  }
+
+  &__row {
+    background-color: var(--color-white);
+    transition: all 0.3s;
+
+    &:nth-of-type(even) {
+      background-color: var(--color-light-grey);
+    }
+
+    &--highlight {
+      background-color: #0080d6 !important;
+      color: #fff;
+      transition: all 0.3s;
+      border: none;
+    }
+  }
+}

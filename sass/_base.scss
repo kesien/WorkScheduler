@@ -1,0 +1,123 @@
+class Workday {
+	maxPersonCountForEight = Math.floor((persons.length - this.personholiday.length) / 2)
+	constructor(date) {
+		this.date = date;
+		this.personholiday = [];
+		this.eight = [];
+		this.halften = [];
+		this.isHoliday = false
+	}
+	
+	isItMax() {
+		let maxPersonForEight = Math.floor((persons.length - workdays[index].personholiday.length) / 2);
+		return this.eight.length >= maxPersonCountForEight;
+	}
+	
+	isPersonOnHoliday(person) {
+		return this.personholiday.includes(person);
+	}
+	
+	isPersonAtEight(person) {
+		return this.eight.includes(person);
+	}
+	
+	isPersonAtHalften(person) {
+		return this.halften.includes(person);
+	}
+	
+	isAlreadyContains(person) {
+		return (this.isPersonOnHoliday(person) || this.isPersonAtEight(person) || this.isPersonAtHalften(person));
+	}
+	
+	updatePersonsAtHalfTen {
+		let personsAtHalften = persons.filter(person => this.halften.includes(person));
+		for (person of personsAtHalften) {
+			person.halften++;
+		}
+	}
+	
+	updatePersonsAtEight {
+		let personsAtEight = persons.filter(person => this.eight.includes(person));
+		for (person	 of personsAtHalften) {
+			person.eight++;
+		}
+	}
+	
+}
+
+function createSchedule() {
+  let max = 1; // A helper variable which is increased by 1 every second loop.
+  for (let workday of workdays) {   
+    let maxPersonCountForEight = Math.floor((persons.length - workday.personholiday.length) / 2)
+    let personsNotOnHolidays  = persons.filter(person => workday.isPersonOnHoliday(person)); // get every person who is not on holiday
+    *let names = personsNotOnHolidays.map(person => person.name); // get the names of the selected persons
+
+    if(workday.isHoliday) { 
+      continue; // Skip the day if it's holiday.
+    }
+	
+	let index = 0
+    while(true) {
+      if (workday.isItMax()) {
+        break; //Break out of the loop if reach the maximum amount of people for eight.
+      }
+
+      // We want to fairly distribute so we filter out the people who were scheduled for 9:30 at the previous day.
+      let filtered;
+      if (index % 2 == 1) {
+		let previousDay = workdays[workdays.indexOf(workday) - 1];
+        if(!previousDay.isHoliday) {
+          filtered = personsNotOnHolidays.filter(person => previousDay.isAtHalfTen(person) && !workday.personAlreadyScheduled(person));
+        } else {
+          filtered = personsNotOnHolidays.filter(person => person.eight < max && !workday.personAlreadyScheduled(person));
+        }
+        filtered = [...filtered, ...workday.eight];
+        if ((filtered.length + workday.eight.length) < workday.maxPersonCountForEight) {
+          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && (!workday.isAtEight(person) && !workday.isAtHalfTen(person)));
+          let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
+          filtered.push(plusRandomPerson);
+        }
+        while(workday.eight.length != filtered.length) {
+          if(workday.eight.length == Math.round(personsNotOnHolidays.length / 2)) {
+            break;
+          }
+          let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
+          if (workday.personIsAlreadyAdded(randomPerson)) {
+            continue; // Skip the person if it's already scheduled
+          }   
+          workday.eight.push(randomPerson);
+          persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
+        }
+      } else {
+        filtered = personsNotOnHolidays.filter(person => person.eight < max && (!workday.isAtEight(person) && !workday.isAtHalfTen(person)));
+        if ((filtered.length + workday.eight.length) < workday.maxPersonCountForEight) {
+          let plusPerson = personsNotOnHolidays.filter(person => !filtered.includes(person) && (!workday.isAtEight(person) && !workday.isAtHalfTen(person)));
+          let plusRandomPerson = plusPerson[Math.floor(Math.random() * plusPerson.length)];
+          filtered.push(plusRandomPerson);
+        }
+        let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
+        if (workday.personIsAlreadyAdded(randomPerson)) {
+          continue; // Skip the person if it's already scheduled
+        }
+  
+        workday.eight.push(randomPerson);
+        persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
+      }
+
+/*       if (index != 0) {
+        // If we don't have the required amount of people (because of requests) we randomly select additional ones.
+        
+      } */
+    }
+
+    // Schedule the remaining persons for 9:30
+    let remainingPersons = personsNotOnHolidays.filter(person => !workday.personAlreadyScheduled(name));
+    //let remainingObjects = remainingPersons.map(person => { return {name: person, isRequest: false}});
+    workday.halften = workday.halften.concat(remainingPersons);
+
+    workday.updatePersonsAtHalfTen();
+
+    max = index % 2 == 1 ? max += 1 : max // Increase max by 1 for every second iteration.
+	index++;
+  }
+}
