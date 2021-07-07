@@ -1,3 +1,33 @@
+:root {
+  --color-primary: #34495e;
+  --color-primary-light: hsl(210, 29%, 60%);
+  --color-primary-dark: #2c3e50;
+  --color-secondary: #ecf0f1;
+  --color-secondary-dark: #bdc3c7;
+  --color-white: #fff;
+  --color-green: #2ecc71;
+  --color-green-light: hsl(145, 63%, 80%);
+  --color-green-dark: #27ae60;
+  --color-light-grey: #d8d8d8;
+  --color-red: #e74c3c;
+  --color-blue: #2980b9;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+}
+
+body {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: var(--color-primary-dark);
+  min-height: 100vh;
+  background: var(--color-secondary);
+}
+
 .btn {
   border: none;
   background: transparent;
@@ -18,10 +48,6 @@
 
 .btn:focus, .btn:active {
   outline: none;
-}
-
-.btn:disabled {
-  opacity: 0.5;
 }
 
 .btn--arrow {
@@ -48,9 +74,6 @@
 .btn--footer {
   font-size: 1.8rem;
   margin-top: 1rem;
-  -webkit-box-flex: 0;
-      -ms-flex: 0 1 17rem;
-          flex: 0 1 17rem;
 }
 
 @media (max-width: 40.625em) {
@@ -71,6 +94,12 @@
   }
 }
 
+@media (max-width: 40.625em) {
+  .btn--footer:not(:last-child) {
+    margin-top: 0.7rem;
+  }
+}
+
 .btn--green {
   background-color: var(--color-green);
   color: var(--color-white);
@@ -80,9 +109,21 @@
   background-color: var(--color-green-dark);
 }
 
+.btn--green:disabled {
+  background-color: var(--color-green-light);
+}
+
 .btn--primary {
   background-color: var(--color-primary);
   color: var(--color-white);
+}
+
+.btn--primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn--primary:disabled {
+  background-color: var(--color-primary-light);
 }
 
 .btn--print {
@@ -765,34 +806,6 @@
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   border: none;
-}
-
-:root {
-  --color-primary: #34495e;
-  --color-primary-dark: #2c3e50;
-  --color-secondary: #ecf0f1;
-  --color-secondary-dark: #bdc3c7;
-  --color-white: #fff;
-  --color-green: #2ecc71;
-  --color-green-dark: #27ae60;
-  --color-light-grey: #d8d8d8;
-  --color-red: #e74c3c;
-  --color-blue: #2980b9;
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  -webkit-box-sizing: inherit;
-          box-sizing: inherit;
-}
-
-body {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  color: var(--color-primary-dark);
-  min-height: 100vh;
-  background: var(--color-secondary);
 }
 
 .container {
