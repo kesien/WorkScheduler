@@ -38,6 +38,7 @@ let month = date.getMonth();
 let day = date.getDay();
 let totalWorkDays = 0;
 let workdays = [];
+let actionLog = [];
 let workdaysBackup = [];
 
 class Workday {
@@ -60,9 +61,7 @@ class Workday {
 
   isAlreadyContains(person) {
     return (
-      this.personholiday.includes(person) ||
-      this.eight.includes(person) ||
-      this.halften.includes(person)
+      !this.personIsNotOnHoliday(person) || !this.personIsNotScheduled(person)
     );
   }
 
@@ -70,6 +69,46 @@ class Workday {
     for (const person of this.halften) {
       person.halften++;
     }
+  }
+
+  personIsNotOnHoliday(person) {
+    if (this.personholiday.length !== 0) {
+      for (const p of this.personholiday) {
+        if (p.name === person.name) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  personIsNotScheduledForHalften(person) {
+    if (this.halften.length !== 0) {
+      for (const p of this.halften) {
+        if (p.name === person.name) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  personIsnotScheduledForEight(person) {
+    if (this.eight.length !== 0) {
+      for (const p of this.eight) {
+        if (p.name === person.name) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  personIsNotScheduled(person) {
+    return (
+      this.personIsnotScheduledForEight(person) &&
+      this.personIsNotScheduledForHalften(person)
+    );
   }
 }
 
@@ -240,18 +279,12 @@ function addPersonHoliday() {
   for (const workday of workdays) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.personholiday.push(selectedPerson);
+      actionLog.push([workday, selectedPerson, "holiday"]);
       selectedPerson.personholiday += 1;
       selectedPerson.eight += 1;
+      refreshCalendar(true);
+      return;
     }
-    let personsOnHoliday = workday.personholiday.map((person) => person.name);
-    let personholidayDiv = calendarDivSelectedDay.querySelector(
-      ".calendar__personholiday"
-    );
-    personholidayDiv.innertHTML = "";
-    personholidayDiv.innerHTML = `<i class="fas fa-user-slash"></i> Szabadság: ${personsOnHoliday.join(
-      ", "
-    )}`;
-    return;
   }
 }
 
@@ -268,10 +301,12 @@ function addRequest() {
       if (requestType == 8) {
         person.eight++;
         workday.eight.push(person);
+        actionLog.push([workday, person, "eight"]);
         calendarDivSelectedDay.querySelector(".calendar__800").innerHTML +=
           createSpan(person, workday.date, true);
       } else {
         workday.halften.push(person);
+        actionLog.push([workday, person, "halften"]);
         calendarDivSelectedDay.querySelector(".calendar__930").innerHTML +=
           createSpan(person, workday.date, true);
       }
@@ -288,7 +323,6 @@ function addRequest() {
 function modalSaveBtnClick(event) {
   event.preventDefault();
   let type = typeSelect.options[typeSelect.selectedIndex].value;
-  backUp();
   partialBtn.disabled = false;
 
   if (type == "holiday") {
@@ -348,16 +382,43 @@ function resetBtnClick() {
 }
 
 function partialReset() {
-  printBtn.style.display = "none";
-  workdays = [];
-  workdays = [...workdaysBackup];
+  if (workdaysBackup.length > 0) {
+    workdays = [];
+    persons = [];
+    persons = [...personsBackup];
+    for (const workday of workdaysBackup) {
+      workdays.push(Object.assign(new Workday(), { ...workday }));
+    }
+    workdaysBackup = [];
+    personsBackup = [];
+    actionLog = [];
+  } else {
+    printBtn.style.display = "none";
+    if (actionLog.length > 0) {
+      let action = actionLog[actionLog.length - 1];
+      if (action[2] === "eight") {
+        action[0].eight.pop();
+        action[1].eight--;
+      }
+      if (action[2] === "halften") {
+        action[0].halften.pop();
+        action[1].halften--;
+      }
+      if (action[2] === "holiday") {
+        action[0].personholiday.pop();
+        action[1].personholiday--;
+        action[1].eight--;
+      }
+      actionLog.pop();
+    }
+  }
+  if (actionLog.length === 0) {
+    partialBtn.disabled = true;
+  }
+  refreshCalendar(true);
   startBtn.disabled = false;
   summaryDiv.classList.add("hidden");
-  partialBtn.disabled = true;
   typeSelect.options[0].disabled = false;
-  persons = [];
-  persons = [...personsBackup];
-  refreshCalendar(true);
 }
 
 /**
@@ -516,111 +577,6 @@ function updateEveryPersonInfo() {
 }
 
 /**
- * Checks the length of eight propety for the day at the given index.
- * @summary Return true it's more or equal than maxPersonCountForEight.
- * @param {number} index - Index of the given day.
- */
-function isItMax(index) {
-  let maxPersonCountForEight = Math.floor(
-    (persons.length - workdays[index].personholiday.length) / 2
-  );
-  /* if (index % 2 == 1) {
-    maxPersonCountForEight += 1;
-  } */
-  return workdays[index].eight.length >= maxPersonCountForEight;
-}
-
-/**
- * Checks if the given person is on holiday or not.
- * @param {Number} index - Index of the given workday
- * @param {string} person - Name of the person
- * @returns - True if the given person is on holiday.
- */
-function isPersonOnHoliday(index, person) {
-  let personsOnHoliday = workdays[index].personholiday.filter(
-    (personObject) => personObject.name == person
-  );
-  return Boolean(personsOnHoliday.length);
-}
-
-/**
- * Checks if the given person is already scheduled for 8:00.
- * @param {Number} index - Index of the given workday
- * @param {string} person - Name of the person
- * @returns - True if the given person is already scheduled for 8:00.
- */
-function isAtEight(index, person) {
-  let eight = workdays[index].eight.filter(
-    (personObject) => personObject.name == person
-  );
-  return Boolean(eight.length);
-}
-
-/**
- * Checks if the given person is already scheduled for 9:30.
- * @param {Number} index - Index of the given workday
- * @param {string} person - Name of the person
- * @returns - True if the given person is already scheduled for 9:30.
- */
-function isAtHalfTen(index, person) {
-  let halften = workdays[index].halften.filter(
-    (personObject) => personObject.name == person
-  );
-  return Boolean(halften.length);
-}
-
-/**
- * Checks if the day at the given index already contains the person.
- * @param {number} index - Index of the given day.
- * @param {Object} randomPerson - A person object.
- */
-function personIsAlreadyAdded(index, randomPerson) {
-  let isEight = isAtEight(index, randomPerson.name);
-  let isHalfTen = isAtHalfTen(index, randomPerson.name);
-  let isHoliday = isPersonOnHoliday(index, randomPerson.name);
-  return isEight || isHalfTen || isHoliday;
-}
-
-/**
- * Checks if the person is already scheduled
- * @param {number} index - Index of the given day.
- * @param {string} name - Name of the person
- */
-function personAlreadyScheduled(index, name) {
-  return isAtEight(index, name) || isAtHalfTen(index, name);
-}
-
-/**
- * Increases halften by 1 for every person in halften of the day at the given index.
- * @param {number} index - Index of the given day.
- */
-function updatePersonsAtHalfTen(index) {
-  let personsAtHalfTen = workdays[index].halften;
-  for (let person of persons) {
-    for (let personAtHalfTen of personsAtHalfTen) {
-      if (personAtHalfTen.name == person.name) {
-        person.halften++;
-      }
-    }
-  }
-}
-
-/**
- * Increases eight by 1 for every person in eight of the day at the given index.
- * @param {number} index - Index of the given day.
- */
-function updatePersonsAtEight(index) {
-  let personsAtEight = workdays[index].eight;
-  for (let person of persons) {
-    for (let personAtEight of personsAtEight) {
-      if (personAtEight.name == person.name) {
-        person.eight++;
-      }
-    }
-  }
-}
-
-/**
  * Creates the schedule
  * @summary Loop through every workdays and randomly schedule every person for 8:00 or 9:30.
  */
@@ -628,8 +584,8 @@ function createSchedule() {
   let max = 1; // A helper variable which is increased by 1 every second loop.
   let index = 0;
   for (let workday of workdays) {
-    let personsNotOnHolidays = persons.filter(
-      (person) => !workday.personholiday.includes(person)
+    let personsNotOnHolidays = persons.filter((person) =>
+      workday.personIsNotOnHoliday(person)
     ); // get every person who is not on holiday
 
     if (workday.isHoliday) {
@@ -642,34 +598,28 @@ function createSchedule() {
       }
 
       // We want to fairly distribute so we filter out the people who were scheduled for 9:30 at the previous day.
-      let filtered;
+      let filtered = [];
       if (index % 2 == 1) {
         let previousDay = workdays[workdays.indexOf(workday) - 1];
         if (!previousDay.isHoliday) {
           filtered = personsNotOnHolidays.filter(
             (person) =>
-              previousDay.halften.includes(person) &&
-              !workday.eight.includes(person) &&
-              !workday.halften.includes(person)
+              !previousDay.personIsNotScheduledForHalften(person) &&
+              workday.personIsNotScheduled(person)
           );
         } else {
-          filtered = personsNotOnHolidays.filter(
-            (person) =>
-              person.eight < max &&
-              !workday.eight.includes(person) &&
-              !workday.halften.includes(person)
-          );
+          filtered = personsNotOnHolidays.filter((person) => {
+            person.eight < max && workday.personIsNotScheduled(person);
+          });
         }
         filtered = [...filtered, ...workday.eight];
         if (
           filtered.length + workday.eight.length <
-          workday.maxPersonCountForEight
+          workday.calculateMaxPersonsForEight()
         ) {
           let plusPerson = personsNotOnHolidays.filter(
             (person) =>
-              !filtered.includes(person) &&
-              !workday.eight.includes(person) &&
-              !workday.halften.includes(person)
+              !filtered.includes(person) && workday.personIsNotScheduled(person)
           );
           let plusRandomPerson =
             plusPerson[Math.floor(Math.random() * plusPerson.length)];
@@ -687,24 +637,19 @@ function createSchedule() {
             continue; // Skip the person if it's already scheduled
           }
           workday.eight.push(randomPerson);
-          persons[persons.indexOf(randomPerson)].eight++; // Increase the eight property of the randomly selected person by 1.
+          randomPerson.eight++; // Increase the eight property of the randomly selected person by 1.
         }
       } else {
         filtered = personsNotOnHolidays.filter(
-          (person) =>
-            person.eight < max &&
-            !workday.eight.includes(person) &&
-            !workday.halften.includes(person)
+          (person) => person.eight < max && workday.personIsNotScheduled(person)
         );
         if (
           filtered.length + workday.eight.length <
-          workday.maxPersonCountForEight
+          workday.calculateMaxPersonsForEight()
         ) {
           let plusPerson = personsNotOnHolidays.filter(
             (person) =>
-              !filtered.includes(person) &&
-              !workday.eight.includes(person) &&
-              !workday.halften.includes(person)
+              !filtered.includes(person) && workday.personIsNotScheduled(person)
           );
           let plusRandomPerson =
             plusPerson[Math.floor(Math.random() * plusPerson.length)];
@@ -722,9 +667,8 @@ function createSchedule() {
     }
 
     // Schedule the remaining persons for 9:30
-    let remainingPersons = personsNotOnHolidays.filter(
-      (person) =>
-        !workday.eight.includes(person) && !workday.halften.includes(person)
+    let remainingPersons = personsNotOnHolidays.filter((person) =>
+      workday.personIsNotScheduled(person)
     );
     workday.halften = workday.halften.concat(remainingPersons);
     workday.updatePersonsAtHalfTen();
@@ -756,28 +700,48 @@ function refreshCalendar(isPartialRefresh = false) {
   for (const calendarDivWorkday of calendarDivWorkdays) {
     const eight = calendarDivWorkday.querySelector(".calendar__800");
     const halften = calendarDivWorkday.querySelector(".calendar__930");
+    const holiday = calendarDivWorkday.querySelector(
+      ".calendar__personholiday"
+    );
     const currentDate = calendarDivWorkday.dataset.day;
     const spanElements = calendarDivWorkday.querySelectorAll(".name");
     const workdayToDisplay = workdays.filter(
       (workday) => workday.date === currentDate
     )[0];
     let names = [];
-    spanElements.forEach((span) => names.push(span.innerText));
-    for (const person of workdayToDisplay.eight) {
-      if (!names.includes(person.name)) {
-        eight.innerHTML += createSpan(person, workdayToDisplay.date);
+
+    if (isPartialRefresh) {
+      eight.innerHTML = "";
+      halften.innerHTML = "";
+      holiday.innerHTML = "";
+      for (const person of workdayToDisplay.eight) {
+        eight.innerHTML += createSpan(person, workdayToDisplay.date, true);
       }
-    }
-    for (const person of workdayToDisplay.halften) {
-      if (!names.includes(person.name)) {
-        halften.innerHTML += createSpan(person, workdayToDisplay.date);
+      for (const person of workdayToDisplay.halften) {
+        halften.innerHTML += createSpan(person, workdayToDisplay.date, true);
       }
-    }
-    if (!isPartialRefresh) {
+
+      calendarDivWorkday.classList.add("calendar__selectable");
+    } else {
+      spanElements.forEach((span) => names.push(span.innerText));
+      for (const person of workdayToDisplay.eight) {
+        if (!names.includes(person.name)) {
+          eight.innerHTML += createSpan(person, workdayToDisplay.date);
+        }
+      }
+      for (const person of workdayToDisplay.halften) {
+        if (!names.includes(person.name)) {
+          halften.innerHTML += createSpan(person, workdayToDisplay.date);
+        }
+      }
       calendarDivWorkday.classList.remove("calendar__selectable");
       calendarDivWorkday.classList.add("calendar__editable");
-    } else {
-      calendarDivWorkday.classList.add("calendar__selectable");
+    }
+    if (workdayToDisplay.personholiday.length > 0) {
+      holiday.innerHTML = `<i class="fas fa-user-slash"></i> Szabadság: `;
+      holiday.innerHTML += workdayToDisplay.personholiday
+        .map((person) => person.name)
+        .join(", ");
     }
   }
   addEventListeners();
@@ -877,7 +841,7 @@ function showModal(data) {
   let [year, month, day] = data.split("-");
   let workday = workdays.filter((workday) => workday.date == data)[0];
   let personsToSelect = persons.filter(
-    (person) => !personIsAlreadyAdded(workdays.indexOf(workday), person)
+    (person) => !workday.isAlreadyContains(person)
   );
   resetModals();
   let personSelect = modal.querySelector("#personSelect");
@@ -1115,6 +1079,9 @@ function createPrintTable() {
     let displayDate = `${displayDay}.${displayMonth}.${d.getFullYear()}`;
 
     let workday = workdays.filter((workday) => workday.date == curDate);
+    let calendarDiv = [...calendarDivWorkdays].filter(
+      (div) => div.dataset.day === curDate
+    )[0];
     if (getDay(d) % 7 == 6) {
       daterow += "</tr>";
       schedulerow += "</tr>";
@@ -1128,19 +1095,25 @@ function createPrintTable() {
       continue;
     }
     let holiday = [...workday[0].personholiday];
-    let eight = workday[0].eight.map((personObject) => {
-      if (personObject.isRequest) {
-        return `<div class='name request'>${personObject.name}</div>`;
+    let eightSpans = [
+      ...calendarDiv.querySelectorAll(".calendar__800 > .name"),
+    ];
+    let halftenSpans = [
+      ...calendarDiv.querySelectorAll(".calendar__930 > .name"),
+    ];
+    let eight = eightSpans.map((span) => {
+      if (span.classList.contains("request")) {
+        return `<div class='name request'>${span.innerText}</div>`;
       } else {
-        return `<div class='name'>${personObject.name}</div>`;
+        return `<div class='name'>${span.innerText}</div>`;
       }
     });
 
-    let halften = workday[0].halften.map((personObject) => {
-      if (personObject.isRequest) {
-        return `<div class='name request'>${personObject.name}</div>`;
+    let halften = halftenSpans.map((span) => {
+      if (span.classList.contains("request")) {
+        return `<div class='name request'>${span.innerText}</div>`;
       } else {
-        return `<div class='name'>${personObject.name}</div>`;
+        return `<div class='name'>${span.innerText}</div>`;
       }
     });
 
