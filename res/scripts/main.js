@@ -178,6 +178,7 @@ let personsBackup = [];
 /* =======================
 Event listeners 
 ======================= */
+document.addEventListener("keydown", keyPressed);
 leftBtn.addEventListener("click", leftBtnClick);
 rightBtn.addEventListener("click", rightBtnClick);
 typeSelect.addEventListener("change", typeChanged);
@@ -302,13 +303,21 @@ function addRequest() {
         person.eight++;
         workday.eight.push(person);
         actionLog.push([workday, person, "eight"]);
-        calendarDivSelectedDay.querySelector(".calendar__800").innerHTML +=
-          createSpan(person, workday.date, true);
+        calendarDivSelectedDay
+          .querySelector(".calendar__800")
+          .insertAdjacentHTML(
+            "beforeend",
+            createSpan(person, workday.date, true)
+          );
       } else {
         workday.halften.push(person);
         actionLog.push([workday, person, "halften"]);
-        calendarDivSelectedDay.querySelector(".calendar__930").innerHTML +=
-          createSpan(person, workday.date, true);
+        calendarDivSelectedDay
+          .querySelector(".calendar__930")
+          .insertAdjacentHTML(
+            "beforeend",
+            createSpan(person, workday.date, true)
+          );
       }
       return;
     }
@@ -446,6 +455,15 @@ function containerDragOver(event) {
     this.appendChild(draggable);
   } else {
     this.insertBefore(draggable, afterElement);
+  }
+}
+
+function keyPressed(event) {
+  if (event.keyCode === 90) {
+    partialReset();
+  }
+  if (event.keyCode === 13) {
+    startBtnClick();
   }
 }
 
@@ -715,10 +733,16 @@ function refreshCalendar(isPartialRefresh = false) {
       halften.innerHTML = "";
       holiday.innerHTML = "";
       for (const person of workdayToDisplay.eight) {
-        eight.innerHTML += createSpan(person, workdayToDisplay.date, true);
+        eight.insertAdjacentHTML(
+          "beforeend",
+          createSpan(person, workdayToDisplay.date, true)
+        );
       }
       for (const person of workdayToDisplay.halften) {
-        halften.innerHTML += createSpan(person, workdayToDisplay.date, true);
+        halften.insertAdjacentHTML(
+          "beforeend",
+          createSpan(person, workdayToDisplay.date, true)
+        );
       }
 
       calendarDivWorkday.classList.add("calendar__selectable");
@@ -726,22 +750,29 @@ function refreshCalendar(isPartialRefresh = false) {
       spanElements.forEach((span) => names.push(span.innerText));
       for (const person of workdayToDisplay.eight) {
         if (!names.includes(person.name)) {
-          eight.innerHTML += createSpan(person, workdayToDisplay.date);
+          eight.insertAdjacentHTML(
+            "beforeend",
+            createSpan(person, workdayToDisplay.date)
+          );
         }
       }
       for (const person of workdayToDisplay.halften) {
         if (!names.includes(person.name)) {
-          halften.innerHTML += createSpan(person, workdayToDisplay.date);
+          halften.insertAdjacentHTML(
+            "beforeend",
+            createSpan(person, workdayToDisplay.date)
+          );
         }
       }
       calendarDivWorkday.classList.remove("calendar__selectable");
       calendarDivWorkday.classList.add("calendar__editable");
     }
     if (workdayToDisplay.personholiday.length > 0) {
-      holiday.innerHTML = `<i class="fas fa-user-slash"></i> Szabadság: `;
-      holiday.innerHTML += workdayToDisplay.personholiday
+      let textToDisplay = `<i class="fas fa-user-slash"></i> Szabadság: `;
+      textToDisplay += workdayToDisplay.personholiday
         .map((person) => person.name)
         .join(", ");
+      holiday.innerHTML = textToDisplay;
     }
   }
   addEventListeners();
@@ -773,8 +804,14 @@ function reset() {
 function showSummary() {
   updateEveryPersonInfo();
   summaryDiv.innerHTML = "";
-  summaryDiv.innerHTML += "<h3>Munkanapok száma: " + totalWorkDays + "</h3>";
-  summaryDiv.innerHTML += "<p><strong>Eloszlás:</strong> </p>";
+  summaryDiv.insertAdjacentHTML(
+    "beforeend",
+    "<h3>Munkanapok száma: " + totalWorkDays + "</h3>"
+  );
+  summaryDiv.insertAdjacentHTML(
+    "beforeend",
+    "<p><strong>Eloszlás:</strong> </p>"
+  );
   let table = `<table class='summary-table'>
                 <thead>
                   <tr>
@@ -795,7 +832,7 @@ function showSummary() {
     table += row;
   }
   table += "</tbody></table>";
-  summaryDiv.innerHTML += table;
+  summaryDiv.insertAdjacentHTML("beforeend", table);
   summaryDiv.classList.remove("hidden");
 }
 
