@@ -402,7 +402,6 @@ function partialReset() {
     personsBackup = [];
     actionLog = [];
   } else {
-    printBtn.style.display = "none";
     if (actionLog.length > 0) {
       let action = actionLog[actionLog.length - 1];
       if (action[2] === "eight") {
@@ -426,7 +425,9 @@ function partialReset() {
   }
   refreshCalendar(true);
   startBtn.disabled = false;
-  summaryDiv.classList.add("hidden");
+  summaryDiv.classList.toggle("hidden");
+  printBtn.classList.add("hidden");
+
   typeSelect.options[0].disabled = false;
 }
 
@@ -437,7 +438,7 @@ function startBtnClick() {
   backUp();
   partialBtn.disabled = false;
   startBtn.disabled = true;
-  printBtn.style.display = "block";
+  printBtn.classList.remove("hidden");
   createSchedule();
   refreshCalendar();
   showSummary();
@@ -797,8 +798,8 @@ function reset() {
   personsBackup = [];
   startBtn.disabled = false;
   partialBtn.disabled = true;
-  printBtn.classList.toggle("hidden");
-  summaryDiv.classList.toggle("hidden");
+  printBtn.classList.add("hidden");
+  summaryDiv.classList.add("hidden");
   typeSelect.options[0].disabled = false;
   totalWorkDays = 0;
   for (let person of persons) {
@@ -843,7 +844,7 @@ function showSummary() {
   }
   table += "</tbody></table>";
   summaryDiv.insertAdjacentHTML("beforeend", table);
-  summaryDiv.classList.remove("hidden");
+  summaryDiv.classList.toggle("hidden");
 }
 
 /**
@@ -908,7 +909,7 @@ function showModal(data) {
   if (dayData[0] != 0) {
     typeSelect.selectedIndex = 1;
     typeSelect.options[0].disabled = true;
-    personSelectGroup.classList.remove("hidden");
+    personSelectGroup.classList.toggle("hidden");
   }
   let title = year + ". " + months[month] + " " + day + ".";
   modalTitle.innerText = title;
