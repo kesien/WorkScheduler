@@ -425,7 +425,7 @@ function partialReset() {
   }
   refreshCalendar(true);
   startBtn.disabled = false;
-  summaryDiv.classList.toggle("hidden");
+  summaryDiv.classList.add("hidden");
   printBtn.classList.add("hidden");
 
   typeSelect.options[0].disabled = false;
