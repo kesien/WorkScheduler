@@ -206,6 +206,7 @@
   &__selectable,
   &__editable {
     position: relative;
+    cursor: pointer;
   }
 
   &__plus-icon,
@@ -217,12 +218,6 @@
     justify-content: center;
     align-items: center;
     z-index: 100;
-  }
-
-  &__selectable:hover &__plus-icon {
-    display: flex;
-    opacity: 1;
-    box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.4);
   }
 
   &__edit-icon {
@@ -244,20 +239,26 @@
     font-size: 3rem;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
     height: 7rem;
     width: 7rem;
     background: linear-gradient(to bottom, #2ecc71, #27ae60);
     border-radius: 50%;
     box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.4);
     opacity: 0;
-    display: none;
-    transition: opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     @include respond(small) {
       margin-left: 10%;
       margin-top: 2rem;
     }
+  }
+
+  &__selectable:hover &__plus-icon {
+    display: flex;
+    opacity: 1;
+    box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.4);
+    transform: translate(-50%, -50%);
   }
 
   &__weekend {

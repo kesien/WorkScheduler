@@ -341,7 +341,7 @@ function modalSaveBtnClick(event) {
   } else if (type == "request") {
     addRequest();
   }
-  modal.style.display = "none";
+  modal.classList.toggle("hidden");
 }
 
 /**
@@ -465,6 +465,11 @@ function keyPressed(event) {
   if (event.keyCode === 13) {
     startBtnClick();
   }
+}
+
+function cellClicked(event) {
+  calendarDivSelectedDay = event.currentTarget;
+  showModal(event.currentTarget.dataset.day);
 }
 
 /* End of event listeners */
@@ -726,6 +731,9 @@ function refreshCalendar(isPartialRefresh = false) {
     const workdayToDisplay = workdays.filter(
       (workday) => workday.date === currentDate
     )[0];
+    if (workdayToDisplay.isHoliday) {
+      continue;
+    }
     let names = [];
 
     if (isPartialRefresh) {
@@ -746,6 +754,7 @@ function refreshCalendar(isPartialRefresh = false) {
       }
 
       calendarDivWorkday.classList.add("calendar__selectable");
+      calendarDivWorkday.addEventListener("click", cellClicked);
     } else {
       spanElements.forEach((span) => names.push(span.innerText));
       for (const person of workdayToDisplay.eight) {
@@ -765,7 +774,8 @@ function refreshCalendar(isPartialRefresh = false) {
         }
       }
       calendarDivWorkday.classList.remove("calendar__selectable");
-      calendarDivWorkday.classList.add("calendar__editable");
+      calendarDivWorkday.removeEventListener("click", cellClicked);
+      //TODO: calendarDivWorkday.classList.add("calendar__editable");
     }
     if (workdayToDisplay.personholiday.length > 0) {
       let textToDisplay = `<i class="fas fa-user-slash"></i> Szabadság: `;
@@ -787,8 +797,8 @@ function reset() {
   personsBackup = [];
   startBtn.disabled = false;
   partialBtn.disabled = true;
-  printBtn.style.display = "none";
-  summaryDiv.classList.add("hidden");
+  printBtn.classList.toggle("hidden");
+  summaryDiv.classList.toggle("hidden");
   typeSelect.options[0].disabled = false;
   totalWorkDays = 0;
   for (let person of persons) {
@@ -902,7 +912,7 @@ function showModal(data) {
   }
   let title = year + ". " + months[month] + " " + day + ".";
   modalTitle.innerText = title;
-  modal.style.display = "flex";
+  modal.classList.toggle("hidden");
 }
 
 function showEditModal(data) {
@@ -998,8 +1008,7 @@ function resetModals() {
  * Closes the modal.
  */
 function closeModal() {
-  modal.style.display = "none";
-  editModal.style.display = "none";
+  modal.classList.toggle("hidden");
 }
 
 /**
@@ -1060,10 +1069,7 @@ function createCalendar(year, month) {
   calendarDivWorkdays = document.querySelectorAll(".calendar__selectable");
 
   calendarDivWorkdays.forEach((cd) => {
-    cd.querySelector(".calendar__plus-icon").addEventListener("click", () => {
-      calendarDivSelectedDay = cd;
-      showModal(cd.dataset.day);
-    });
+    cd.addEventListener("click", cellClicked);
     cd.querySelector(".calendar__edit-icon").addEventListener("click", () => {
       showEditModal(cd.dataset.day);
     });

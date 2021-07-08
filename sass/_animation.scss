@@ -7,3 +7,19 @@
     opacity: 1;
   }
 }
+
+@keyframes fadeOut {
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(30%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

@@ -1,6 +1,6 @@
 .modal {
   color: #000;
-  display: none;
+  display: flex;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -12,6 +12,8 @@
   background-color: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
+  animation: fadeIn 0.3s ease;
+  transition: all 0.5s ease;
 
   &__header {
     font-size: 2rem;
@@ -27,17 +29,14 @@
   &__content {
     font-size: 1.8rem;
     background-color: #fefefe;
-    border-radius: 0.3rem;
+    border-radius: 3px;
     min-width: 500px; /* Could be more or less, depending on screen size */
     max-width: 25%;
-    overflow: hidden;
+    box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.8);
+    animation: slideInFromBottom 0.5s ease;
 
     @include respond(small) {
       min-width: 90%;
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       font-size: 1.6rem;
     }
 
@@ -60,10 +59,8 @@
   }
 
   &__close {
-    &:link,
-    &:visited {
-      color: #aaa;
-    }
+    color: #aaa;
+    transition: all 0.3s;
 
     &:hover,
     &:focus {
@@ -155,6 +152,8 @@
     justify-content: space-evenly;
     align-items: center;
     margin: 1rem 0;
+    opacity: 1;
+    animation: fadeIn 0.2s ease;
 
     label {
       flex-grow: 2;
