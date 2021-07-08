@@ -106,3 +106,15 @@
 .dragging {
   opacity: 0.6;
 }
+
+.animate {
+  &--right {
+    animation: slideOutToRight 0.5s ease-in-out,
+      slideInFromLeft 0.5s ease-in-out 0.5s;
+  }
+
+  &--left {
+    animation: slideOutToLeft 0.5s ease-in-out,
+      slideInFromRight 0.5s ease-in-out 0.5s;
+  }
+}

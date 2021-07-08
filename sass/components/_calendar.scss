@@ -39,6 +39,7 @@
     grid-template-columns: 5% repeat(7, 13.57%);
     grid-template-rows: 5rem;
     grid-auto-rows: 14rem;
+    backface-visibility: hidden;
 
     @include respond(medium) {
       font-size: 1.4rem;

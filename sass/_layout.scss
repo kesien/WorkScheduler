@@ -1,6 +1,8 @@
 .container {
   max-width: 80%;
   margin: 0 auto;
+  backface-visibility: hidden;
+  overflow: hidden;
 
   @include respond(large) {
     max-width: 100%;

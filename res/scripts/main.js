@@ -220,8 +220,14 @@ function leftBtnClick() {
     year -= 1;
     month = 11;
   }
-  reset();
-  render();
+  setTimeout(() => {
+    reset();
+    render();
+  }, 500);
+  calendarDiv.classList.add("animate--right");
+  setTimeout(() => {
+    calendarDiv.classList.remove("animate--right");
+  }, 1000);
 }
 
 /**
@@ -233,8 +239,14 @@ function rightBtnClick() {
     year += 1;
     month = 0;
   }
-  reset();
-  render();
+  setTimeout(() => {
+    reset();
+    render();
+  }, 500);
+  calendarDiv.classList.add("animate--left");
+  setTimeout(() => {
+    calendarDiv.classList.remove("animate--left");
+  }, 1000);
 }
 
 /**
@@ -854,7 +866,11 @@ function showSummary() {
 function getCell(date) {
   let curDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
   let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-  let realDate = `0${date.getMonth() + 1}-${day}`;
+  let month =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1;
+  let realDate = `${month}-${day}`;
 
   if (!isWeekend(date)) {
     populateWorkdays(curDate);
