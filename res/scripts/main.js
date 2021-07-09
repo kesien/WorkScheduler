@@ -787,6 +787,7 @@ function refreshCalendar(isPartialRefresh = false) {
         }
       }
       calendarDivWorkday.classList.remove("calendar__selectable");
+      calendarDivWorkday.query;
       calendarDivWorkday.removeEventListener("click", cellClicked);
       //TODO: calendarDivWorkday.classList.add("calendar__editable");
     }
