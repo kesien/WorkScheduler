@@ -644,9 +644,10 @@ function createSchedule() {
               workday.personIsNotScheduled(person)
           );
         } else {
-          filtered = personsNotOnHolidays.filter((person) => {
-            person.eight < max && workday.personIsNotScheduled(person);
-          });
+          filtered = personsNotOnHolidays.filter(
+            (person) =>
+              person.eight < max && workday.personIsNotScheduled(person)
+          );
         }
         filtered = [...filtered, ...workday.eight];
         if (
