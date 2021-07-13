@@ -353,7 +353,7 @@ function modalSaveBtnClick(event) {
   } else if (type == "request") {
     addRequest();
   }
-  modal.classList.toggle("hidden");
+  closeModal();
 }
 
 /**
@@ -931,6 +931,7 @@ function showModal(data) {
   }
   let title = year + ". " + months[month] + " " + day + ".";
   modalTitle.innerText = title;
+  modal.classList.remove("fadeout");
   modal.classList.toggle("hidden");
 }
 
@@ -1027,7 +1028,10 @@ function resetModals() {
  * Closes the modal.
  */
 function closeModal() {
-  modal.classList.toggle("hidden");
+  modal.classList.add("fadeout");
+  setTimeout(() => {
+    modal.classList.add("hidden");
+  }, 500);
 }
 
 /**

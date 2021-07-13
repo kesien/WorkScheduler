@@ -765,6 +765,11 @@ body {
           justify-content: space-between;
 }
 
+.modal.fadeout .modal__content {
+  -webkit-transform: translateY(30%);
+          transform: translateY(30%);
+}
+
 .modal__content {
   font-size: 1.8rem;
   background-color: #fefefe;
@@ -776,6 +781,8 @@ body {
           box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.8);
   -webkit-animation: slideInFromBottom 0.5s ease;
           animation: slideInFromBottom 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }
 
 @media (max-width: 40.625em) {
@@ -787,18 +794,16 @@ body {
 
 .modal__content select {
   font-size: inherit;
-  background-color: var(--color-primary-dark);
-  border: none;
+  background-color: transparent;
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 0.5rem;
   padding: 1rem 0.5rem;
-  color: var(--color-white);
+  color: var(--color-primary-dark);
 }
 
 .modal__content select:active, .modal__content select:focus {
   outline: none;
-}
-
-.modal__content select option {
-  background-color: var(--color-primary);
+  border-color: var(--color-green-dark);
 }
 
 .modal__close {
@@ -1093,11 +1098,6 @@ body {
   }
 }
 
-.hidden {
-  opacity: 0;
-  display: none;
-}
-
 .highlight {
   cursor: pointer;
   display: inline-block;
@@ -1159,5 +1159,16 @@ body {
 .animate--left {
   -webkit-animation: slideOutToLeft 0.5s ease-in-out, slideInFromRight 0.5s ease-in-out 0.5s;
           animation: slideOutToLeft 0.5s ease-in-out, slideInFromRight 0.5s ease-in-out 0.5s;
+}
+
+.fadeout {
+  -webkit-animation: fadeOut 0.5s ease;
+          animation: fadeOut 0.5s ease;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+.hidden {
+  display: none;
 }
 /*# sourceMappingURL=main.css.map */
