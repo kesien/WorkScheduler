@@ -267,7 +267,7 @@ function addHoliday() {
   calendarDivSelectedDay.classList.add("calendar__holiday");
   calendarDivSelectedDay.innerHTML = `<i class="fas fa-grin-beam"></i>`;
   calendarDivSelectedDay.classList.remove("calendar__selectable");
-  for (const workday of workdays) {
+  for (const workday of workdaysBackup) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.isHoliday = true;
       break;
@@ -284,7 +284,7 @@ function addPersonHoliday() {
     (person) =>
       person.name === personSelect.options[personSelect.selectedIndex].value
   )[0];
-  for (const workday of workdays) {
+  for (const workday of workdaysBackup) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.personholiday.push(selectedPerson);
       actionLog.push([workday, selectedPerson, "holiday"]);
@@ -304,7 +304,7 @@ function addRequest() {
   let selectedPerson = personSelect.options[personSelect.selectedIndex].value;
   let person = persons.filter((person) => person.name === selectedPerson)[0];
 
-  for (const workday of workdays) {
+  for (const workday of workdaysBackup) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       if (requestType == 8) {
         person.eight++;
@@ -398,14 +398,17 @@ function resetBtnClick() {
 }
 
 function partialReset() {
-  if (workdaysBackup.length > 0) {
+  if (workdays.length > 0) {
     workdays = [];
-    persons = [];
-    persons = [...personsBackup];
-    for (const workday of workdaysBackup) {
-      workdays.push(Object.assign(new Workday(), { ...workday }));
+    for (const p of personsBackup) {
+      for (const person of persons) {
+        if (p.name === person.name) {
+          person.eight = p.eight;
+          person.halften = p.halften;
+          person.personholiday = p.personholiday;
+        }
+      }
     }
-    workdaysBackup = [];
     personsBackup = [];
     actionLog = [];
   } else {
@@ -489,7 +492,7 @@ Data functions
  * Creates a back up of the workdays and persons arrays.
  */
 function backUp() {
-  workdaysBackup = JSON.parse(JSON.stringify(workdays));
+  //workdaysBackup = JSON.parse(JSON.stringify(workdays));
   personsBackup = JSON.parse(JSON.stringify(persons));
 }
 
@@ -595,7 +598,7 @@ function populateWorkdays(date) {
       return;
     }
   }
-  workdays.push(new Workday(date));
+  workdaysBackup.push(new Workday(date));
 }
 
 /**
@@ -612,28 +615,33 @@ function updateEveryPersonInfo() {
  * @summary Loop through every workdays and randomly schedule every person for 8:00 or 9:30.
  */
 function createSchedule() {
+  workdays = [];
   let max = 1; // A helper variable which is increased by 1 every second loop.
   let index = 0;
   let filteredPersons = [];
-  for (let workday of workdays) {
+  for (let workday of workdaysBackup) {
     if (workday.isHoliday) {
       continue;
     }
-    const maxPersonCount = workday.calculateMaxPersonsForEight(index);
-    filteredPersons = persons.filter(
-      (person) => !workday.isAlreadyContains(person)
-    );
-    while (workday.eight.length < maxPersonCount) {
+    let wd = new Workday();
+    wd.date = workday.date;
+    wd.eight = [...workday.eight];
+    wd.halften = [...workday.halften];
+    wd.personholiday = [...workday.personholiday];
+    workdays.push(wd);
+    const maxPersonCount = wd.calculateMaxPersonsForEight(index);
+    filteredPersons = persons.filter((person) => !wd.isAlreadyContains(person));
+    while (wd.eight.length < maxPersonCount) {
       let _count = 0;
       if (_count >= 1000000) {
         throw new Error("Infinite loop detected");
       }
       filteredPersons = persons.filter(
-        (person) => !workday.isAlreadyContains(person)
+        (person) => !wd.isAlreadyContains(person)
       );
       let filtered = filteredPersons.filter((person) => person.eight < max);
       if (index % 2 == 1) {
-        let previousDay = workdays[workdays.indexOf(workday) - 1];
+        let previousDay = workdays[workdays.indexOf(wd) - 1];
         if (!previousDay.isHoliday) {
           filtered = filteredPersons.filter(
             (person) => !previousDay.personIsNotScheduledForHalften(person)
@@ -642,7 +650,7 @@ function createSchedule() {
       }
       if (
         filtered.length < maxPersonCount &&
-        filtered.length + workday.eight.length < maxPersonCount
+        filtered.length + wd.eight.length < maxPersonCount
       ) {
         let plusPerson = filteredPersons.filter(
           (person) => !filtered.includes(person)
@@ -652,16 +660,16 @@ function createSchedule() {
         filtered.push(plusRandomPerson);
       }
       let randomPerson = filtered[Math.floor(Math.random() * filtered.length)];
-      workday.eight.push(randomPerson);
+      wd.eight.push(randomPerson);
       randomPerson.eight++;
       _count++;
     }
 
     let remainingPersons = filteredPersons.filter((person) =>
-      workday.personIsNotScheduled(person)
+      wd.personIsNotScheduled(person)
     );
-    workday.halften = workday.halften.concat(remainingPersons);
-    workday.halften.forEach((person) => person.halften++);
+    wd.halften = [...workday.halften.concat(remainingPersons)];
+    wd.halften.forEach((person) => person.halften++);
     max = index % 2 == 1 ? (max += 1) : max;
     index++;
   }
@@ -695,9 +703,16 @@ function refreshCalendar(isPartialRefresh = false) {
     );
     const currentDate = calendarDivWorkday.dataset.day;
     const spanElements = calendarDivWorkday.querySelectorAll(".name");
-    const workdayToDisplay = workdays.filter(
-      (workday) => workday.date === currentDate
-    )[0];
+    let workdayToDisplay;
+    if (workdays.length === 0) {
+      workdayToDisplay = workdaysBackup.filter(
+        (workday) => workday.date === currentDate
+      )[0];
+    } else {
+      workdayToDisplay = workdays.filter(
+        (workday) => workday.date === currentDate
+      )[0];
+    }
     if (workdayToDisplay.isHoliday) {
       continue;
     }
@@ -858,7 +873,7 @@ function getCell(date) {
  */
 function showModal(data) {
   let [year, month, day] = data.split("-");
-  let workday = workdays.filter((workday) => workday.date == data)[0];
+  let workday = workdaysBackup.filter((workday) => workday.date == data)[0];
   let personsToSelect = persons.filter(
     (person) => !workday.isAlreadyContains(person)
   );
@@ -871,7 +886,7 @@ function showModal(data) {
     option.innerText = person.name;
     personSelect.appendChild(option);
   }
-  let dayData = workdays
+  let dayData = workdaysBackup
     .filter((workday) => workday.date == data)
     .map((day) => {
       return day.personholiday.length + day.eight.length + day.halften.length;
