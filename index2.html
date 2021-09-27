@@ -123,7 +123,47 @@
             </button>
           </div>
           <div class="calendar__body" id="calendar__body">
-            <template id="cell_template"> </template>
+            <div class="calendar__table">
+              <div class="cell--header">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="cell--header">Hétfő</div>
+              <div class="cell--header">Kedd</div>
+              <div class="cell--header">Szerda</div>
+              <div class="cell--header">Csütörtök</div>
+              <div class="cell--header">Péntek</div>
+              <div class="cell--header">Szombat</div>
+              <div class="cell--header">Vasárnap</div>
+              <template id="hours_cell_template">
+                <div class="cell cell--hours">
+                  <div class="calendar__day calendar__day--hours">
+                    <div class="calendar__day--half">8:00</div>
+                    <div class="calendar__day--half">9:30</div>
+                  </div>
+                </div>
+              </template>
+              <template id="empty_cell_template">
+                <div class="cell calendar__day--empty">
+                  <i class="fas fa-ban"></i>
+                </div>
+              </template>
+              <template id="cell_template">
+                <div class="cell">
+                  <span class="calendar__plus-icon"
+                    ><i class="fas fa-plus"></i
+                  ></span>
+                  <span class="calendar__edit-icon"
+                    ><i class="fas fa-edit"></i
+                  ></span>
+                  <div class="calendar__day">
+                    <div class="calendar__personholiday"></div>
+                    <div class="calendar__800"></div>
+                    <div class="calendar__930"></div>
+                    <span class="calendar__daynumber"></span>
+                  </div>
+                </div>
+              </template>
+            </div>
           </div>
           <div class="calendar__footer">
             <button

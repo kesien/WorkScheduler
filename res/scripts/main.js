@@ -2,34 +2,34 @@
 Date related variables
 ======================= */
 const dayNames = [
-  "Hétfő",
-  "Kedd",
-  "Szerda",
-  "Csütörtök",
-  "Péntek",
-  "Szombat",
-  "Vasárnap",
+  'Hétfő',
+  'Kedd',
+  'Szerda',
+  'Csütörtök',
+  'Péntek',
+  'Szombat',
+  'Vasárnap',
 ];
 const germanWeekDays = [
-  "Montag",
-  "Dienstag",
-  "Mittwoch",
-  "Donnerstag",
-  "Freitag",
+  'Montag',
+  'Dienstag',
+  'Mittwoch',
+  'Donnerstag',
+  'Freitag',
 ];
 const months = [
-  "Január",
-  "Február",
-  "Március",
-  "Április",
-  "Május",
-  "Június",
-  "Július",
-  "Augusztus",
-  "Szeptember",
-  "Október",
-  "November",
-  "December",
+  'Január',
+  'Február',
+  'Március',
+  'Április',
+  'Május',
+  'Június',
+  'Július',
+  'Augusztus',
+  'Szeptember',
+  'Október',
+  'November',
+  'December',
 ];
 
 const date = new Date();
@@ -114,35 +114,35 @@ HTML Elements
 ======================= */
 
 /* DIVs */
-const calendarDiv = document.querySelector("#calendar__body");
-const summaryDiv = document.querySelector(".summary");
-const containers = document.querySelectorAll(".modalcontainer");
+const calendarDiv = document.querySelector('#calendar__body');
+const summaryDiv = document.querySelector('.summary');
+const containers = document.querySelectorAll('.modalcontainer');
 
 /* Modals */
-const modal = document.getElementById("myModal");
-const editModal = document.getElementById("editModal");
-const modalForm = document.querySelector(".modal__form");
-const modalTitle = document.querySelector(".modal__title");
+const modal = document.getElementById('myModal');
+const editModal = document.getElementById('editModal');
+const modalForm = document.querySelector('.modal__form');
+const modalTitle = document.querySelector('.modal__title');
 
 /* Select */
-const typeSelect = document.querySelector("#typeSelect");
-const personSelect = document.querySelector("#personSelect");
-const whenSelect = document.querySelector("#whenSelect");
-const personSelectGroup = document.querySelector(".modal__form-group--person");
-const whenSelectGroup = document.querySelector(".modal__form-group--when");
+const typeSelect = document.querySelector('#typeSelect');
+const personSelect = document.querySelector('#personSelect');
+const whenSelect = document.querySelector('#whenSelect');
+const personSelectGroup = document.querySelector('.modal__form-group--person');
+const whenSelectGroup = document.querySelector('.modal__form-group--when');
 
 /* Buttons */
-const modalSaveBtn = document.querySelector("#btn-save-plus");
-const editModalSaveBtn = document.querySelector("#btn-edit-save");
-const leftBtn = document.querySelector("#left-arrow");
-const rightBtn = document.querySelector("#right-arrow");
-const closeButtons = document.querySelectorAll(".modal__close");
-const printBtn = document.querySelector("#btn-print");
-const partialBtn = document.querySelector("#btn-partial");
-const resetBtn = document.querySelector("#btn-reset");
-const startBtn = document.querySelector("#btn-start");
+const modalSaveBtn = document.querySelector('#btn-save-plus');
+const editModalSaveBtn = document.querySelector('#btn-edit-save');
+const leftBtn = document.querySelector('#left-arrow');
+const rightBtn = document.querySelector('#right-arrow');
+const closeButtons = document.querySelectorAll('.modal__close');
+const printBtn = document.querySelector('#btn-print');
+const partialBtn = document.querySelector('#btn-partial');
+const resetBtn = document.querySelector('#btn-reset');
+const startBtn = document.querySelector('#btn-start');
 
-const titleMonth = document.querySelector(".calendar__title");
+const titleMonth = document.querySelector('.calendar__title');
 let calendarDivWorkdays;
 let calendarDivSelectedDay;
 /* End of HTML Elements */
@@ -160,11 +160,12 @@ class Person {
 }
 
 let persons = [
-  new Person("Heni"),
-  new Person("Anita"),
-  new Person("Marina"),
-  new Person("Judit"),
-  new Person("Orsi"),
+  new Person('Heni'),
+  new Person('Anita'),
+  new Person('Marina'),
+  new Person('Judit'),
+  new Person('Orsi'),
+  new Person('Csilla'),
 ];
 
 let personsBackup = [];
@@ -173,34 +174,34 @@ let personsBackup = [];
 /* =======================
 Event listeners 
 ======================= */
-document.addEventListener("keydown", keyPressed);
-leftBtn.addEventListener("click", leftBtnClick);
-rightBtn.addEventListener("click", rightBtnClick);
-typeSelect.addEventListener("change", typeChanged);
-modalSaveBtn.addEventListener("click", modalSaveBtnClick);
-editModalSaveBtn.addEventListener("click", editSave);
-resetBtn.addEventListener("click", resetBtnClick);
-startBtn.addEventListener("click", startBtnClick);
-partialBtn.addEventListener("click", partialReset);
-printBtn.addEventListener("click", printSchedule);
+document.addEventListener('keydown', keyPressed);
+leftBtn.addEventListener('click', leftBtnClick);
+rightBtn.addEventListener('click', rightBtnClick);
+typeSelect.addEventListener('change', typeChanged);
+modalSaveBtn.addEventListener('click', modalSaveBtnClick);
+editModalSaveBtn.addEventListener('click', editSave);
+resetBtn.addEventListener('click', resetBtnClick);
+startBtn.addEventListener('click', startBtnClick);
+partialBtn.addEventListener('click', partialReset);
+printBtn.addEventListener('click', printSchedule);
 closeButtons.forEach((closeButton) => {
-  closeButton.addEventListener("click", closeModal);
+  closeButton.addEventListener('click', closeModal);
 });
 
 containers.forEach((container) => {
-  container.addEventListener("dragover", containerDragOver);
+  container.addEventListener('dragover', containerDragOver);
 });
 
 /**
  * Add the mouseover and mouseleave event listeners to all names
  */
 function addEventListeners() {
-  let spans = document.querySelectorAll(".name");
+  let spans = document.querySelectorAll('.name');
   for (let span of spans) {
-    span.addEventListener("mouseover", (e) => {
+    span.addEventListener('mouseover', (e) => {
       highlightName(e);
     });
-    span.addEventListener("mouseleave", (e) => {
+    span.addEventListener('mouseleave', (e) => {
       removeHighlight(e);
     });
   }
@@ -219,9 +220,9 @@ function leftBtnClick() {
     reset();
     render();
   }, 500);
-  calendarDiv.classList.add("animate--right");
+  calendarDiv.classList.add('animate--right');
   setTimeout(() => {
-    calendarDiv.classList.remove("animate--right");
+    calendarDiv.classList.remove('animate--right');
   }, 1000);
 }
 
@@ -238,9 +239,9 @@ function rightBtnClick() {
     reset();
     render();
   }, 500);
-  calendarDiv.classList.add("animate--left");
+  calendarDiv.classList.add('animate--left');
   setTimeout(() => {
-    calendarDiv.classList.remove("animate--left");
+    calendarDiv.classList.remove('animate--left');
   }, 1000);
 }
 
@@ -248,15 +249,15 @@ function rightBtnClick() {
  * Displays or hide personSelectGroup and whenSelectgroup in the Modal based on typeSelect's value.
  */
 function typeChanged() {
-  if (typeSelect.options[typeSelect.selectedIndex].value == "personholiday") {
-    personSelectGroup.classList.remove("hidden");
-    whenSelectGroup.classList.add("hidden");
-  } else if (typeSelect.options[typeSelect.selectedIndex].value == "request") {
-    personSelectGroup.classList.remove("hidden");
-    whenSelectGroup.classList.remove("hidden");
+  if (typeSelect.options[typeSelect.selectedIndex].value == 'personholiday') {
+    personSelectGroup.classList.remove('hidden');
+    whenSelectGroup.classList.add('hidden');
+  } else if (typeSelect.options[typeSelect.selectedIndex].value == 'request') {
+    personSelectGroup.classList.remove('hidden');
+    whenSelectGroup.classList.remove('hidden');
   } else {
-    personSelectGroup.classList.add("hidden");
-    whenSelectGroup.classList.add("hidden");
+    personSelectGroup.classList.add('hidden');
+    whenSelectGroup.classList.add('hidden');
   }
 }
 
@@ -264,9 +265,9 @@ function typeChanged() {
  * Marks the selected day as holiday and update the UI accordingly.
  */
 function addHoliday() {
-  calendarDivSelectedDay.classList.add("calendar__holiday");
+  calendarDivSelectedDay.classList.add('calendar__holiday');
   calendarDivSelectedDay.innerHTML = `<i class="fas fa-grin-beam"></i>`;
-  calendarDivSelectedDay.classList.remove("calendar__selectable");
+  calendarDivSelectedDay.classList.remove('calendar__selectable');
   for (const workday of workdaysBackup) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.isHoliday = true;
@@ -287,7 +288,7 @@ function addPersonHoliday() {
   for (const workday of workdaysBackup) {
     if (workday.date == calendarDivSelectedDay.dataset.day) {
       workday.personholiday.push(selectedPerson);
-      actionLog.push([workday, selectedPerson, "holiday"]);
+      actionLog.push([workday, selectedPerson, 'holiday']);
       selectedPerson.personholiday += 1;
       selectedPerson.eight += 1;
       refreshCalendar(true);
@@ -309,20 +310,20 @@ function addRequest() {
       if (requestType == 8) {
         person.eight++;
         workday.eight.push(person);
-        actionLog.push([workday, person, "eight"]);
+        actionLog.push([workday, person, 'eight']);
         calendarDivSelectedDay
-          .querySelector(".calendar__800")
+          .querySelector('.calendar__800')
           .insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             createSpan(person, workday.date, true)
           );
       } else {
         workday.halften.push(person);
-        actionLog.push([workday, person, "halften"]);
+        actionLog.push([workday, person, 'halften']);
         calendarDivSelectedDay
-          .querySelector(".calendar__930")
+          .querySelector('.calendar__930')
           .insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             createSpan(person, workday.date, true)
           );
       }
@@ -341,11 +342,11 @@ function modalSaveBtnClick(event) {
   let type = typeSelect.options[typeSelect.selectedIndex].value;
   partialBtn.disabled = false;
 
-  if (type == "holiday") {
+  if (type == 'holiday') {
     addHoliday();
-  } else if (type == "personholiday") {
+  } else if (type == 'personholiday') {
     addPersonHoliday();
-  } else if (type == "request") {
+  } else if (type == 'request') {
     addRequest();
   }
   closeModal();
@@ -356,16 +357,16 @@ function modalSaveBtnClick(event) {
  * @param {Event} event - Event
  */
 function highlightName(event) {
-  let spans = document.querySelectorAll(".name");
-  let rows = document.querySelectorAll(".summary-table__row");
+  let spans = document.querySelectorAll('.name');
+  let rows = document.querySelectorAll('.summary-table__row');
   for (let span of spans) {
     if (span.dataset.name == event.target.dataset.name) {
-      span.classList.add("highlight");
+      span.classList.add('highlight');
     }
   }
   for (let row of rows) {
     if (row.dataset.name == event.target.dataset.name) {
-      row.classList.add("summary-table__row--highlight");
+      row.classList.add('summary-table__row--highlight');
     }
   }
 }
@@ -375,16 +376,16 @@ function highlightName(event) {
  * @param {Event} event - Event
  */
 function removeHighlight(event) {
-  let spans = document.querySelectorAll(".name");
-  let rows = document.querySelectorAll(".summary-table__row");
+  let spans = document.querySelectorAll('.name');
+  let rows = document.querySelectorAll('.summary-table__row');
   for (let span of spans) {
     if (span.dataset.name == event.target.dataset.name) {
-      span.classList.remove("highlight");
+      span.classList.remove('highlight');
     }
   }
   for (let row of rows) {
     if (row.dataset.name == event.target.dataset.name) {
-      row.classList.remove("summary-table__row--highlight");
+      row.classList.remove('summary-table__row--highlight');
     }
   }
 }
@@ -414,15 +415,15 @@ function partialReset() {
   } else {
     if (actionLog.length > 0) {
       let action = actionLog[actionLog.length - 1];
-      if (action[2] === "eight") {
+      if (action[2] === 'eight') {
         action[0].eight.pop();
         action[1].eight--;
       }
-      if (action[2] === "halften") {
+      if (action[2] === 'halften') {
         action[0].halften.pop();
         action[1].halften--;
       }
-      if (action[2] === "holiday") {
+      if (action[2] === 'holiday') {
         action[0].personholiday.pop();
         action[1].personholiday--;
         action[1].eight--;
@@ -435,8 +436,8 @@ function partialReset() {
   }
   refreshCalendar(true);
   startBtn.disabled = false;
-  summaryDiv.classList.add("hidden");
-  printBtn.classList.add("hidden");
+  summaryDiv.classList.add('hidden');
+  printBtn.classList.add('hidden');
 
   typeSelect.options[0].disabled = false;
 }
@@ -448,7 +449,7 @@ function startBtnClick() {
   backUp();
   partialBtn.disabled = false;
   startBtn.disabled = true;
-  printBtn.classList.remove("hidden");
+  printBtn.classList.remove('hidden');
   createSchedule();
   refreshCalendar();
   showSummary();
@@ -461,7 +462,7 @@ function startBtnClick() {
 function containerDragOver(event) {
   event.preventDefault();
   const afterElement = getDragAfterElement(this, event.clientX);
-  const draggable = document.querySelector(".dragging");
+  const draggable = document.querySelector('.dragging');
   if (afterElement == null) {
     this.appendChild(draggable);
   } else {
@@ -525,7 +526,7 @@ function editSave(data) {
  */
 function getDragAfterElement(container, x) {
   const draggableElements = [
-    ...container.querySelectorAll(".draggable:not(.dragging)"),
+    ...container.querySelectorAll('.draggable:not(.dragging)'),
   ];
 
   return draggableElements.reduce(
@@ -634,7 +635,7 @@ function createSchedule() {
     while (wd.eight.length < maxPersonCount) {
       let _count = 0;
       if (_count >= 1000000) {
-        throw new Error("Infinite loop detected");
+        throw new Error('Infinite loop detected');
       }
       filteredPersons = persons.filter(
         (person) => !wd.isAlreadyContains(person)
@@ -687,7 +688,7 @@ UI functions
  */
 function createSpan(person, date, isRequest = false) {
   return `<span class='name ${
-    isRequest ? "request" : ""
+    isRequest ? 'request' : ''
   }' data-date=${date} data-name='${person.name}'>${person.name}</span>`;
 }
 
@@ -696,13 +697,13 @@ function createSpan(person, date, isRequest = false) {
  */
 function refreshCalendar(isPartialRefresh = false) {
   for (const calendarDivWorkday of calendarDivWorkdays) {
-    const eight = calendarDivWorkday.querySelector(".calendar__800");
-    const halften = calendarDivWorkday.querySelector(".calendar__930");
+    const eight = calendarDivWorkday.querySelector('.calendar__800');
+    const halften = calendarDivWorkday.querySelector('.calendar__930');
     const holiday = calendarDivWorkday.querySelector(
-      ".calendar__personholiday"
+      '.calendar__personholiday'
     );
     const currentDate = calendarDivWorkday.dataset.day;
-    const spanElements = calendarDivWorkday.querySelectorAll(".name");
+    const spanElements = calendarDivWorkday.querySelectorAll('.name');
     let workdayToDisplay;
     if (workdays.length === 0) {
       workdayToDisplay = workdaysBackup.filter(
@@ -719,30 +720,30 @@ function refreshCalendar(isPartialRefresh = false) {
     let names = [];
 
     if (isPartialRefresh) {
-      eight.innerHTML = "";
-      halften.innerHTML = "";
-      holiday.innerHTML = "";
+      eight.innerHTML = '';
+      halften.innerHTML = '';
+      holiday.innerHTML = '';
       for (const person of workdayToDisplay.eight) {
         eight.insertAdjacentHTML(
-          "beforeend",
+          'beforeend',
           createSpan(person, workdayToDisplay.date, true)
         );
       }
       for (const person of workdayToDisplay.halften) {
         halften.insertAdjacentHTML(
-          "beforeend",
+          'beforeend',
           createSpan(person, workdayToDisplay.date, true)
         );
       }
 
-      calendarDivWorkday.classList.add("calendar__selectable");
-      calendarDivWorkday.addEventListener("click", cellClicked);
+      calendarDivWorkday.classList.add('calendar__selectable');
+      calendarDivWorkday.addEventListener('click', cellClicked);
     } else {
       spanElements.forEach((span) => names.push(span.innerText));
       for (const person of workdayToDisplay.eight) {
         if (!names.includes(person.name)) {
           eight.insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             createSpan(person, workdayToDisplay.date)
           );
         }
@@ -750,21 +751,21 @@ function refreshCalendar(isPartialRefresh = false) {
       for (const person of workdayToDisplay.halften) {
         if (!names.includes(person.name)) {
           halften.insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             createSpan(person, workdayToDisplay.date)
           );
         }
       }
-      calendarDivWorkday.classList.remove("calendar__selectable");
+      calendarDivWorkday.classList.remove('calendar__selectable');
       calendarDivWorkday.query;
-      calendarDivWorkday.removeEventListener("click", cellClicked);
+      calendarDivWorkday.removeEventListener('click', cellClicked);
       //TODO: calendarDivWorkday.classList.add("calendar__editable");
     }
     if (workdayToDisplay.personholiday.length > 0) {
       let textToDisplay = `<i class="fas fa-user-slash"></i> Szabadság: `;
       textToDisplay += workdayToDisplay.personholiday
         .map((person) => person.name)
-        .join(", ");
+        .join(', ');
       holiday.innerHTML = textToDisplay;
     }
   }
@@ -780,8 +781,8 @@ function reset() {
   personsBackup = [];
   startBtn.disabled = false;
   partialBtn.disabled = true;
-  printBtn.classList.add("hidden");
-  summaryDiv.classList.add("hidden");
+  printBtn.classList.add('hidden');
+  summaryDiv.classList.add('hidden');
   typeSelect.options[0].disabled = false;
   totalWorkDays = 0;
   for (let person of persons) {
@@ -796,14 +797,14 @@ function reset() {
  */
 function showSummary() {
   updateEveryPersonInfo();
-  summaryDiv.innerHTML = "";
+  summaryDiv.innerHTML = '';
   summaryDiv.insertAdjacentHTML(
-    "beforeend",
-    "<h3>Munkanapok száma: " + totalWorkDays + "</h3>"
+    'beforeend',
+    '<h3>Munkanapok száma: ' + totalWorkDays + '</h3>'
   );
   summaryDiv.insertAdjacentHTML(
-    "beforeend",
-    "<p><strong>Eloszlás:</strong> </p>"
+    'beforeend',
+    '<p><strong>Eloszlás:</strong> </p>'
   );
   let table = `<table class='summary-table'>
                 <thead>
@@ -824,9 +825,9 @@ function showSummary() {
     </tr>`;
     table += row;
   }
-  table += "</tbody></table>";
-  summaryDiv.insertAdjacentHTML("beforeend", table);
-  summaryDiv.classList.toggle("hidden");
+  table += '</tbody></table>';
+  summaryDiv.insertAdjacentHTML('beforeend', table);
+  summaryDiv.classList.toggle('hidden');
 }
 
 /**
@@ -835,10 +836,10 @@ function showSummary() {
  */
 function getCell(date) {
   let curDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   let month =
     date.getMonth() + 1 < 10
-      ? "0" + (date.getMonth() + 1)
+      ? '0' + (date.getMonth() + 1)
       : date.getMonth() + 1;
   let realDate = `${month}-${day}`;
 
@@ -872,16 +873,16 @@ function getCell(date) {
  * @param {string} data - Date string e.g.: 2021-06-01
  */
 function showModal(data) {
-  let [year, month, day] = data.split("-");
+  let [year, month, day] = data.split('-');
   let workday = workdaysBackup.filter((workday) => workday.date == data)[0];
   let personsToSelect = persons.filter(
     (person) => !workday.isAlreadyContains(person)
   );
   resetModals();
-  let personSelect = modal.querySelector("#personSelect");
-  personSelect.innerHTML = "";
+  let personSelect = modal.querySelector('#personSelect');
+  personSelect.innerHTML = '';
   for (const person of personsToSelect) {
-    let option = document.createElement("OPTION");
+    let option = document.createElement('OPTION');
     option.value = person.name;
     option.innerText = person.name;
     personSelect.appendChild(option);
@@ -895,23 +896,23 @@ function showModal(data) {
   if (dayData[0] != 0) {
     typeSelect.selectedIndex = 1;
     typeSelect.options[0].disabled = true;
-    personSelectGroup.classList.toggle("hidden");
+    personSelectGroup.classList.toggle('hidden');
   }
-  let title = year + ". " + months[month] + " " + day + ".";
+  let title = year + '. ' + months[month] + ' ' + day + '.';
   modalTitle.innerText = title;
-  modal.classList.remove("fadeout");
-  modal.classList.toggle("hidden");
+  modal.classList.remove('fadeout');
+  modal.classList.toggle('hidden');
 }
 
 function showEditModal(data) {
   let year, month, day;
-  [year, month, day] = data.split("-");
-  editModal.querySelector(".date-data").value = data;
+  [year, month, day] = data.split('-');
+  editModal.querySelector('.date-data').value = data;
   resetModals();
   let dayData = workdays.filter((workday) => workday.date == data);
   if (dayData[0] != 0) {
-    let title = year + ". " + months[month] + " " + day + ".";
-    editModal.querySelector(".modal__title").innerText = title;
+    let title = year + '. ' + months[month] + ' ' + day + '.';
+    editModal.querySelector('.modal__title').innerText = title;
     let eight = dayData[0].eight.map((personObject) => {
       return `<span draggable="true" data-name="${personObject.name}" class="draggable"><i class="fas fa-arrows-alt"></i> ${personObject.name}</span>`;
     });
@@ -924,62 +925,62 @@ function showEditModal(data) {
               </div>`;
     });
 
-    editModal.querySelector(".modal__800").innerHTML = eight.join("");
-    editModal.querySelector(".modal__930").innerHTML = halften.join("");
-    editModal.querySelector(".modal__holiday-list").innerHTML =
-      holiday.join("");
-    const draggables = editModal.querySelectorAll(".draggable");
-    const removeIcons = editModal.querySelectorAll(".remove");
+    editModal.querySelector('.modal__800').innerHTML = eight.join('');
+    editModal.querySelector('.modal__930').innerHTML = halften.join('');
+    editModal.querySelector('.modal__holiday-list').innerHTML =
+      holiday.join('');
+    const draggables = editModal.querySelectorAll('.draggable');
+    const removeIcons = editModal.querySelectorAll('.remove');
 
     draggables.forEach((draggable) => {
-      draggable.addEventListener("dragstart", () => {
-        draggable.classList.add("dragging");
+      draggable.addEventListener('dragstart', () => {
+        draggable.classList.add('dragging');
       });
-      draggable.addEventListener("dragend", () => {
-        draggable.classList.remove("dragging");
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
       });
       draggable.addEventListener(
-        "touchmove",
+        'touchmove',
         () => {
-          draggable.classList.add("dragging");
+          draggable.classList.add('dragging');
         },
         { passive: true }
       );
-      draggable.addEventListener("touchend", () => {
-        draggable.classList.remove("dragging");
+      draggable.addEventListener('touchend', () => {
+        draggable.classList.remove('dragging');
       });
     });
 
     removeIcons.forEach((removeIcon) => {
-      removeIcon.addEventListener("click", removeHoliday);
+      removeIcon.addEventListener('click', removeHoliday);
     });
-    editModal.style.display = "flex";
+    editModal.style.display = 'flex';
   }
 }
 
 function removeHoliday() {
   let name = this.parentElement.dataset.name;
-  let date = editModal.querySelector(".date-data").value;
+  let date = editModal.querySelector('.date-data').value;
   let workday = workdays.filter((workday) => workday.date == date);
   let p = workday[0].personholiday.filter((person) => person.name == name);
   workday[0].personholiday = workday[0].personholiday.filter(
     (person) => person != p[0]
   );
-  let newDraggable = document.createElement("SPAN");
+  let newDraggable = document.createElement('SPAN');
   newDraggable.innerHTML = `<i class="fas fa-arrows-alt"></i> ${name}`;
   newDraggable.dataset.name = name;
   newDraggable.draggable = true;
-  newDraggable.classList.add("draggable");
+  newDraggable.classList.add('draggable');
   editModal
-    .querySelector(".modal__holiday-list")
+    .querySelector('.modal__holiday-list')
     .removeChild(this.parentElement);
-  editModal.querySelector(".modal__unscheduled").appendChild(newDraggable);
-  newDraggable.addEventListener("dragstart", () => {
-    newDraggable.classList.add("dragging");
+  editModal.querySelector('.modal__unscheduled').appendChild(newDraggable);
+  newDraggable.addEventListener('dragstart', () => {
+    newDraggable.classList.add('dragging');
   });
 
-  newDraggable.addEventListener("dragend", () => {
-    newDraggable.classList.remove("dragging");
+  newDraggable.addEventListener('dragend', () => {
+    newDraggable.classList.remove('dragging');
   });
 }
 
@@ -988,17 +989,17 @@ function removeHoliday() {
  */
 function resetModals() {
   modalForm.reset();
-  personSelectGroup.classList.add("hidden");
-  whenSelectGroup.classList.add("hidden");
+  personSelectGroup.classList.add('hidden');
+  whenSelectGroup.classList.add('hidden');
 }
 
 /**
  * Closes the modal.
  */
 function closeModal() {
-  modal.classList.add("fadeout");
+  modal.classList.add('fadeout');
   setTimeout(() => {
-    modal.classList.add("hidden");
+    modal.classList.add('hidden');
   }, 500);
 }
 
@@ -1012,7 +1013,7 @@ function createCalendar(year, month) {
     .map((day) => {
       return `<div class="cell--header">${day}</div>`;
     })
-    .join("");
+    .join('');
   let table = `
   <div class="calendar__table">
     <div class="cell--header"><i class="fas fa-clock"></i></div>
@@ -1055,13 +1056,13 @@ function createCalendar(year, month) {
     }
   }
 
-  table += "</div>";
+  table += '</div>';
   calendarDiv.innerHTML = table;
-  calendarDivWorkdays = document.querySelectorAll(".calendar__selectable");
+  calendarDivWorkdays = document.querySelectorAll('.calendar__selectable');
 
   calendarDivWorkdays.forEach((cd) => {
-    cd.addEventListener("click", cellClicked);
-    cd.querySelector(".calendar__edit-icon").addEventListener("click", () => {
+    cd.addEventListener('click', cellClicked);
+    cd.querySelector('.calendar__edit-icon').addEventListener('click', () => {
       showEditModal(cd.dataset.day);
     });
   });
@@ -1084,7 +1085,7 @@ function createPrintSummary() {
                   <td>${person.personholiday}</td>
                 </tr>`;
   }
-  summary += "</table></div>";
+  summary += '</table></div>';
   return summary;
 }
 
@@ -1107,9 +1108,9 @@ function createPrintTable() {
     let curDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 
     // We want to show the date in a readable format.
-    let displayDay = d.getDate() < 10 ? "0" + d.getDate() : d.getDate();
+    let displayDay = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
     let displayMonth =
-      d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth();
+      d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth();
     let displayDate = `${displayDay}.${displayMonth}.${d.getFullYear()}`;
 
     let workday = workdays.filter((workday) => workday.date == curDate);
@@ -1117,8 +1118,8 @@ function createPrintTable() {
       (div) => div.dataset.day === curDate
     )[0];
     if (getDay(d) % 7 == 6) {
-      daterow += "</tr>";
-      schedulerow += "</tr>";
+      daterow += '</tr>';
+      schedulerow += '</tr>';
       content += daterow;
       content += schedulerow;
       daterow = `<tr><td>&nbsp;</td>`;
@@ -1130,13 +1131,13 @@ function createPrintTable() {
     }
     let holiday = [...workday[0].personholiday];
     let eightSpans = [
-      ...calendarDiv.querySelectorAll(".calendar__800 > .name"),
+      ...calendarDiv.querySelectorAll('.calendar__800 > .name'),
     ];
     let halftenSpans = [
-      ...calendarDiv.querySelectorAll(".calendar__930 > .name"),
+      ...calendarDiv.querySelectorAll('.calendar__930 > .name'),
     ];
     let eight = eightSpans.map((span) => {
-      if (span.classList.contains("request")) {
+      if (span.classList.contains('request')) {
         return `<div class='name request'>${span.innerText}</div>`;
       } else {
         return `<div class='name'>${span.innerText}</div>`;
@@ -1144,7 +1145,7 @@ function createPrintTable() {
     });
 
     let halften = halftenSpans.map((span) => {
-      if (span.classList.contains("request")) {
+      if (span.classList.contains('request')) {
         return `<div class='name request'>${span.innerText}</div>`;
       } else {
         return `<div class='name'>${span.innerText}</div>`;
@@ -1182,8 +1183,8 @@ function createPrintTable() {
 
     daterow += `<td><div class='date'>${displayDate}</div></td>`;
     schedulerow += `<td><div class='names'>${eight.join(
-      ""
-    )}</div><div class='names'>${halften.join("")}</div></td>`;
+      ''
+    )}</div><div class='names'>${halften.join('')}</div></td>`;
     d.setDate(d.getDate() + 1);
   }
 
@@ -1201,13 +1202,13 @@ function createPrintTable() {
 }
 
 function printSchedule() {
-  let printWindow = window.open("", "", "height=750,width=1150");
-  printWindow.document.write("<html><head>");
+  let printWindow = window.open('', '', 'height=750,width=1150');
+  printWindow.document.write('<html><head>');
   printWindow.document.write('<link rel="stylesheet" href="print.css"/>');
-  printWindow.document.write("</head><body>");
+  printWindow.document.write('</head><body>');
   printWindow.document.write(createPrintTable());
-  printWindow.document.write("</body></html>");
-  printWindow.addEventListener("load", () => {
+  printWindow.document.write('</body></html>');
+  printWindow.addEventListener('load', () => {
     printWindow.print();
   });
   printWindow.document.close();
