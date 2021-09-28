@@ -1158,31 +1158,17 @@ function createPrintTable() {
     });
 
     while (eight.length < 3) {
-      if (eight.length == 1 && holiday.length > 1) {
-        eight.push(`<div class='name'>&nbsp;</div>`);
+      if (eight.length < 3 && holiday.length != 0) {
         eight.push(
           `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
         );
-      } else if (eight.length == 2 && holiday.length > 1) {
-        eight.push(
-          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
-        );
-      } else {
-        eight.push(`<div class='name'>&nbsp;</div>`);
       }
     }
     while (halften.length < 3) {
-      if (halften.length == 1 && holiday.length != 0) {
-        halften.push(`<div class='name'>&nbsp;</div>`);
+      if (halften.length < 3 && holiday.length != 0) {
         halften.push(
           `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
         );
-      } else if (halften.length == 2 && holiday.length != 0) {
-        halften.push(
-          `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
-        );
-      } else {
-        halften.push(`<div class='name'>&nbsp;</div>`);
       }
     }
 
