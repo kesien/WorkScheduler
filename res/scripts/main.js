@@ -1104,13 +1104,13 @@ function createPrintTable() {
     schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`;
   }
 
-  while (d.getMonth() == month) {
+  do {
     let curDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 
     // We want to show the date in a readable format.
     let displayDay = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
     let displayMonth =
-      d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth();
+      d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
     let displayDate = `${displayDay}.${displayMonth}.${d.getFullYear()}`;
 
     let workday = workdays.filter((workday) => workday.date == curDate);
@@ -1122,9 +1122,13 @@ function createPrintTable() {
       schedulerow += '</tr>';
       content += daterow;
       content += schedulerow;
-      daterow = `<tr><td>&nbsp;</td>`;
-      schedulerow = `<tr><td><div class='hours'><div class='eight'>8:00-16:30</div><div class='halften'>9:30-18:00</div></div></td>`;
+      let next = new Date(year, month, d.getDate() + 1);
+      if (next.getMonth() == month) {
+        daterow = `<tr><td>&nbsp;</td>`;
+        schedulerow = `<tr><td><div class='hours'><div class='eight'>8:00-16:30</div><div class='halften'>9:30-18:00</div></div></td>`;
+      }
     }
+
     if (workday.length == 0) {
       d.setDate(d.getDate() + 1);
       continue;
@@ -1186,7 +1190,7 @@ function createPrintTable() {
       ''
     )}</div><div class='names'>${halften.join('')}</div></td>`;
     d.setDate(d.getDate() + 1);
-  }
+  } while (d.getMonth() == month);
 
   if (getDay(d) != 0) {
     for (let i = getDay(d); i < 5; i++) {
@@ -1194,6 +1198,7 @@ function createPrintTable() {
       schedulerow += `<td><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div><div class='names'><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div><div class='name'>&nbsp;</div></div></td>`;
     }
   }
+
   content += daterow;
   content += schedulerow;
   content += `</tbody></table>`;
