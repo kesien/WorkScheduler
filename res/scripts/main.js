@@ -1131,7 +1131,14 @@ function createPrintTable() {
       }
     }
 
-    if (workday.length == 0 || workday[0].isHoliday) {
+    if (workday.length == 0) {
+      d.setDate(d.getDate() + 1);
+      continue;
+    }
+
+    if (workday[0].isHoliday) {
+      daterow += `<td><div class='date'>${displayDate}</div></td>`;
+      schedulerow += `<td><div class='names'></div><div class='names'></div></td>`;
       d.setDate(d.getDate() + 1);
       continue;
     }
