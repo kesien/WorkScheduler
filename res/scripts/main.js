@@ -1131,7 +1131,7 @@ function createPrintTable() {
       }
     }
 
-    if (workday.length == 0) {
+    if (!workday.length || workday.isHoliday) {
       d.setDate(d.getDate() + 1);
       continue;
     }
