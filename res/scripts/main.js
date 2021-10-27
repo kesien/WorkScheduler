@@ -621,15 +621,16 @@ function createSchedule() {
   let index = 0;
   let filteredPersons = [];
   for (let workday of workdaysBackup) {
-    if (workday.isHoliday) {
-      continue;
-    }
     let wd = new Workday();
     wd.date = workday.date;
     wd.eight = [...workday.eight];
     wd.halften = [...workday.halften];
     wd.personholiday = [...workday.personholiday];
+    wd.isHoliday = workday.isHoliday;
     workdays.push(wd);
+    if (workday.isHoliday) {
+      continue;
+    }
     const maxPersonCount = wd.calculateMaxPersonsForEight(index);
     filteredPersons = persons.filter((person) => !wd.isAlreadyContains(person));
     while (wd.eight.length < maxPersonCount) {
