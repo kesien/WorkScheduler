@@ -1138,7 +1138,7 @@ function createPrintTable() {
 
     if (workday[0].isHoliday) {
       daterow += `<td><div class='date'>${displayDate}</div></td>`;
-      schedulerow += `<td><div class='names'></div><div class='names'></div></td>`;
+      schedulerow += `<td><div class='names'><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div><div class='names'><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div></td>`;
       d.setDate(d.getDate() + 1);
       continue;
     }
