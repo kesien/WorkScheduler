@@ -165,7 +165,6 @@ let persons = [
   new Person('Marina'),
   new Person('Judit'),
   new Person('Orsi'),
-  new Person('Csilla'),
 ];
 
 let personsBackup = [];
