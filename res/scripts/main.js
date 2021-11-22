@@ -1165,7 +1165,7 @@ function createPrintTable() {
     });
 
     while (eight.length < 3) {
-      if (eight.length < 3 && holiday.length != 0) {
+      if (eight.length < 3) {
         eight.push(
           `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
         );
