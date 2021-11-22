@@ -1172,7 +1172,7 @@ function createPrintTable() {
       }
     }
     while (halften.length < 3) {
-      if (halften.length < 3 && holiday.length != 0) {
+      if (halften.length < 3) {
         halften.push(
           `<div class='name holiday'>${holiday.pop().name} (ferien)</div>`
         );
